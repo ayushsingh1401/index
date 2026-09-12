@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEVBHOOMI BILL BOOK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   Tokens
+   ========================================================= */
+:root {
+  --ink:        #1C1E26;
+  --ink-soft:   #565A6B;
+  --navy:       #101B33;
+  --navy-soft:  #1B2A4A;
+  --paper:      #FFFFFF;
+  --paper-cool: #F6F7F5;
+  --line:       #DEDFE3;
+  --line-soft:  #ECEDEF;
+  --brass:      #A6752F;
+  --maroon:     #7A2E2E;
+
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans:  'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono:  'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper-cool);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+h1, h2 {
+  font-family: var(--serif);
+  margin: 0;
+  color: var(--navy);
+}
+
+
+.product-id-cell input{font-family:var(--mono)} .submit-invoice-btn{margin:14px 0 4px;width:100%;border:0;background:var(--navy);color:#fff;padding:12px 16px;border-radius:var(--radius);font-weight:700;cursor:pointer;transition:.18s} .submit-invoice-btn:hover{background:var(--navy-soft);transform:translateY(-1px)} .send-card{max-width:760px;background:var(--paper);border:1px solid var(--line);padding:22px;border-radius:var(--radius);box-shadow:0 8px 24px rgba(16,27,51,.06)} .send-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.send-grid .field-wide{grid-column:1/-1}.send-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.whatsapp-btn{background:#1b8f45;color:#fff;border:0;padding:11px 16px;border-radius:var(--radius);font-weight:700;cursor:pointer}.send-pdf-btn{background:var(--navy);color:#fff;border:0;padding:11px 16px;border-radius:var(--radius);font-weight:600;cursor:pointer}.send-status{margin-left:8px;color:var(--brass);font-size:13px}@media(max-width:700px){.send-grid{grid-template-columns:1fr}.send-grid .field-wide{grid-column:auto}}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* =========================================================
+   App shell
+   ========================================================= */
+.app {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+.is-hidden { display: none !important; }
+
+/* ---------- Rail ---------- */
+.rail {
+  background: var(--navy);
+  color: #E9EBF2;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.rail-brand { display: flex; align-items: center; gap: 12px; }
+
+.rail-mark {
+  width: 36px; height: 36px;
+  border-radius: var(--radius);
+  background: var(--brass);
+  color: var(--navy);
+  font-family: var(--serif);
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.rail-title { display: flex; flex-direction: column; line-height: 1.25; }
+.rail-title strong { font-family: var(--serif); font-size: 17px; }
+.rail-title span { font-size: 12px; color: #9AA3BD; }
+
+.rail-nav { display: flex; flex-direction: column; gap: 4px; }
+
+.rail-btn {
+  text-align: left;
+  background: none;
+  border: none;
+  color: #C7CCDE;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rail-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.rail-btn.is-active { background: rgba(166, 117, 47, 0.18); color: #fff; font-weight: 500; }
+
+.rail-count {
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  font-size: 11px;
+  padding: 1px 7px;
+  font-family: var(--mono);
+}
+
+.rail-foot { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+
+.rail-print {
+  background: var(--brass);
+  color: var(--navy);
+  border: none;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+}
+.rail-print:hover { background: #B98436; }
+
+.rail-ghost {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #C7CCDE;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.rail-ghost:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+/* =========================================================
+   Views
+   ========================================================= */
+.view { padding: 32px 36px 64px; }
+
+#view-editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.panel-head { margin-bottom: 22px; }
+.panel-head h1 { font-size: 24px; }
+.panel-head p { margin: 6px 0 0; color: var(--ink-soft); font-size: 13.5px; }
+
+.panel { min-width: 0; }
+
+.section-label {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-weight: 600;
+  margin: 26px 0 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.form-panel .section-label:first-of-type { border-top: none; padding-top: 0; }
+
+.inline-check {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.inline-check input { margin: 0; }
+
+/* ---------- Fields ---------- */
+.field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 14px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field span { font-size: 12px; color: var(--ink-soft); }
+.field-wide { grid-column: 1 / -1; }
+
+.field input, .field select, .field textarea {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 9px 10px;
+  background: var(--paper);
+}
+.field input:focus, .field select:focus, .field textarea:focus,
+.items-table input:focus, .items-table select:focus {
+  outline: 2px solid var(--brass);
+  outline-offset: 1px;
+  border-color: var(--brass);
+}
+.field textarea { resize: vertical; font-family: var(--sans); }
+
+/* ---------- Items table (editor) ---------- */
+.table-wrap { overflow-x: auto; }
+.items-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.items-table th {
+  text-align: left; font-size: 10.5px; color: var(--ink-soft); font-weight: 600;
+  padding: 0 5px 6px; border-bottom: 1px solid var(--line);
+}
+.items-table td { padding: 4px; vertical-align: middle; }
+.items-table input, .items-table select {
+  width: 100%; border: 1px solid transparent; background: var(--paper-cool);
+  border-radius: var(--radius); padding: 7px 6px; font-family: var(--sans);
+}
+.items-table input:hover, .items-table select:hover { border-color: var(--line); }
+.col-qty input, .col-rate input, .col-disc input { font-family: var(--mono); }
+
+.i-amt {
+  font-family: var(--mono); text-align: right; padding-right: 8px;
+  white-space: nowrap; color: var(--navy); font-weight: 500;
+}
+
+.col-del { width: 26px; }
+.i-del { border: none; background: none; color: var(--ink-soft); font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 6px; }
+.i-del:hover { color: var(--maroon); }
+
+.add-row-btn {
+  margin-top: 10px; background: none; border: 1px dashed var(--line);
+  color: var(--navy-soft); padding: 9px 14px; border-radius: var(--radius);
+  cursor: pointer; font-weight: 500;
+}
+.add-row-btn:hover { border-color: var(--brass); color: var(--brass); }
+
+.saved-note { margin-left: 12px; font-size: 12.5px; color: var(--brass); }
+.settings-grid { max-width: 640px; margin-bottom: 14px; }
+
+/* =========================================================
+   Invoice preview — bordered tax-invoice replica
+   ========================================================= */
+.preview-panel { position: sticky; top: 24px; }
+
+.paper {
+  background: var(--paper);
+  border: 1px solid #000;
+  padding: 0;
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
+  font-size: 11px;
+  color: #000;
+  line-height: 1.35;
+}
+
+.inv-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid #000;
+  letter-spacing: 0.03em;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.doc-table td, .doc-table th {
+  border: 1px solid #000;
+  padding: 4px 6px;
+  vertical-align: top;
+  font-size: 10.5px;
+}
+
+.doc-table + .doc-table { border-top: none; }
+
+/* ---- header block ---- */
+.head-table { border-top: none; }
+.cell-seller { width: 45%; }
+.seller-name { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+.seller-line { margin-top: 1px; }
+.cell-label { font-size: 10px; color: #333; }
+.cell-label strong { display: block; font-size: 10.5px; color: #000; font-weight: 600; margin-top: 1px; }
+.cell-sub { margin-top: 4px; }
+.cell-terms { min-height: 18px; }
+
+/* ---- buyer / consignee ---- */
+.party-table { border-top: none; }
+.cell-party { width: 50%; }
+.cell-party strong { display: block; font-size: 11.5px; margin: 2px 0 3px; }
+.cell-party div { margin-top: 1px; }
+
+.strip-label {
+  display: block;
+  font-size: 9.5px;
+  color: #444;
+  margin-bottom: 2px;
+}
+
+/* ---- items table ---- */
+.items-doc-table { border-top: none; }
+.items-doc-table th {
+  font-weight: 700; font-size: 10px; text-align: center; background: #F3F3F1;
+}
+.items-doc-table td { text-align: center; }
+.items-doc-table .col-desc { text-align: left; width: 30%; }
+.items-doc-table th.col-desc { text-align: left; }
+.items-doc-table .col-sl { width: 4%; }
+.items-doc-table .col-hsn { width: 10%; }
+.items-doc-table .col-qty { width: 10%; }
+.items-doc-table .col-rate { width: 10%; text-align: right; }
+.items-doc-table .col-unit { width: 6%; }
+.items-doc-table .col-disc { width: 7%; }
+.items-doc-table .col-amt { width: 13%; text-align: right; font-family: var(--mono); }
+
+.tax-line td { font-style: italic; font-weight: 600; }
+.tax-label { text-align: right; padding-right: 10px; }
+
+.total-line td { font-weight: 700; border-top: 1.5px solid #000; }
+.cell-total-label { text-align: center; }
+
+/* ---- amount in words strips ---- */
+.words-table { border-top: none; }
+.words-table td { font-size: 10.5px; }
+.words-table strong { display: block; margin-top: 2px; font-size: 11px; }
+.cell-eoe { width: 70px; text-align: center; vertical-align: middle; font-style: italic; }
+
+/* ---- HSN tax breakdown table ---- */
+.hsn-table { border-top: none; }
+.hsn-table th { font-weight: 700; font-size: 10px; text-align: center; background: #F3F3F1; }
+.hsn-table td { text-align: right; }
+.hsn-table td.col-hsn { text-align: center; }
+.hsn-table .col-rate { text-align: center; width: 8%; }
+
+/* ---- footer: declaration + bank ---- */
+.foot-table { border-top: none; }
+.cell-decl { width: 55%; font-size: 10px; }
+.cell-decl div { margin-top: 3px; white-space: pre-line; }
+.cell-bank { width: 45%; }
+.cell-bank div { margin-top: 2px; }
+
+.sign-block { margin-top: 30px; text-align: right; }
+.sign-line {
+  margin-top: 28px;
+  padding-top: 4px;
+  border-top: 1px solid #000;
+  font-size: 10px;
+}
+
+.paper-computer-note {
+  text-align: center;
+  font-size: 10px;
+  padding: 6px 0;
+  font-style: italic;
+  color: #333;
+}
+
+.inline-actions { display: flex; align-items: center; gap: 8px; }
+.mini-select, .mini-btn {
+  font-size: 11.5px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 5px 8px;
+  background: var(--paper);
+  cursor: pointer;
+}
+.mini-btn:hover { border-color: var(--brass); color: var(--brass); }
+
+.danger-note { font-size: 12.5px; color: var(--ink-soft); margin: 8px 0; max-width: 480px; }
+.danger-btn {
+  background: none;
+  border: 1px solid var(--maroon);
+  color: var(--maroon);
+  padding: 9px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+.danger-btn:hover { background: var(--maroon); color: #fff; }
+
+/* ---------- Master tables (items / parties) ---------- */
+.master-toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.master-table { width: 100%; border-collapse: collapse; font-size: 13px; max-width: 1100px; }
+.master-table th {
+  text-align: left; font-size: 11px; color: var(--ink-soft); font-weight: 600;
+  padding: 0 8px 8px; border-bottom: 1px solid var(--line);
+}
+.master-table td { padding: 5px 8px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+.master-table input[type="text"], .master-table input[type="number"] {
+  width: 100%; border: 1px solid transparent; background: var(--paper-cool);
+  border-radius: var(--radius); padding: 6px 7px; font-family: inherit;
+}
+.master-table input:hover { border-color: var(--line); }
+.master-table input[type="checkbox"] { width: auto; }
+.master-row-del {
+  border: none; background: none; color: var(--ink-soft); font-size: 17px;
+  line-height: 1; cursor: pointer; padding: 4px 6px;
+}
+.master-row-del:hover { color: var(--maroon); }
+
+/* ---------- Reports ---------- */
+.report-cards { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+.report-card {
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 18px; min-width: 150px;
+}
+.report-card span { display: block; font-size: 11.5px; color: var(--ink-soft); }
+.report-card strong { display: block; font-family: var(--mono); font-size: 19px; color: var(--navy); margin-top: 4px; }
+
+/* =========================================================
+   History
+   ========================================================= */
+.history-list { display: flex; flex-direction: column; gap: 10px; max-width: 720px; }
+.history-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px;
+}
+.history-item strong { font-family: var(--serif); font-size: 15px; }
+.history-item span { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+.history-actions { display: flex; gap: 8px; }
+.history-actions button {
+  border: 1px solid var(--line); background: var(--paper-cool); border-radius: var(--radius);
+  padding: 7px 12px; cursor: pointer;
+}
+.history-actions button:hover { border-color: var(--brass); }
+.history-actions button.danger:hover { border-color: var(--maroon); color: var(--maroon); }
+.history-empty { color: var(--ink-soft); font-size: 13.5px; }
+
+/* =========================================================
+   Modern motion & inventory UI
+   ========================================================= */
+body { overflow-x: hidden; }
+.view { animation: viewIn .38s ease both; }
+.panel, .report-card, .history-item, .table-wrap { transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+.panel:hover, .report-card:hover { transform: translateY(-2px); }
+.rail-btn, .rail-print, .rail-ghost, .add-row-btn, .mini-btn, button { transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease; }
+button:hover { transform: translateY(-1px); }
+button:active { transform: translateY(0) scale(.98); }
+.rail-mark { box-shadow: 0 0 0 0 rgba(166,117,47,.35); animation: logoPulse 2.8s ease-in-out infinite; }
+.inventory-good { color: #1f6b43 !important; font-weight: 600; }
+.inventory-low { color: #a35b16 !important; font-weight: 600; }
+.inventory-out { color: #9a2f2f !important; font-weight: 700; }
+.inventory-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.pdf-page-actions { display:flex; gap:8px; justify-content:flex-end; margin-bottom:10px; flex-wrap:wrap; }
+.pdf-download-btn { background: var(--navy); color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; box-shadow:0 8px 22px rgba(16,27,51,.12); }
+.ppt-download-btn { background: #6d3f9e; color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; }
+@keyframes viewIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes logoPulse { 0%,100% { box-shadow:0 0 0 0 rgba(166,117,47,.25); } 50% { box-shadow:0 0 0 7px rgba(166,117,47,0); } }
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 1080px) {
+  .app { grid-template-columns: 1fr; }
+  .rail { position: static; height: auto; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .rail-nav { flex-direction: row; }
+  .rail-foot { flex-direction: row; margin-top: 0; margin-left: auto; }
+  #view-editor { grid-template-columns: 1fr; }
+  .preview-panel { position: static; }
+  .field-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   Print
+   ========================================================= */
+@media print {
+  body { background: #fff; }
+  .rail, .form-panel, #view-history, #view-settings { display: none !important; }
+  .app { display: block; }
+  #view-editor { display: block; }
+  .preview-panel { position: static; }
+  .paper { border: none; }
+  .pdf-page-actions { display: none !important; }
+}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== Side rail ===== -->
+  <aside class="rail">
+    <div class="rail-brand">
+      <span class="rail-mark">R</span>
+      <div class="rail-title">
+        <strong>DEVBHOOMI BILL BOOK</strong>
+        <span>Smart GST billing &amp; inventory</span>
+      </div>
+    </div>
+
+    <nav class="rail-nav">
+      <button class="rail-btn is-active" data-view="editor" id="navEditor">New invoice</button>
+      <button class="rail-btn" data-view="history" id="navHistory">History <span id="historyCount" class="rail-count">0</span></button>
+      <button class="rail-btn" data-view="items" id="navItems">Items <span id="itemsCount" class="rail-count">0</span></button>
+      <button class="rail-btn" data-view="parties" id="navParties">Parties <span id="partiesCount" class="rail-count">0</span></button>
+      <button class="rail-btn" data-view="reports" id="navReports">Reports</button>
+      <button class="rail-btn" data-view="send" id="navSend">Send Invoice</button>
+      <button class="rail-btn" data-view="settings" id="navSettings">Your business</button>
+    </nav>
+
+    <div class="rail-foot">
+      <button id="printBtn" class="rail-print">Print / Save PDF</button>
+      <button id="newBtn" class="rail-ghost">Start blank invoice</button>
+    </div>
+  </aside>
+
+  <!-- ===== Editor view ===== -->
+  <main class="view" id="view-editor">
+
+    <section class="panel form-panel">
+      <header class="panel-head">
+        <h1>Invoice details</h1>
+        <p>Fill this in — the tax invoice on the right updates as you type.</p>
+      </header>
+
+      <h2 class="section-label">Invoice</h2>
+      <div class="field-grid">
+        <label class="field"><span>Invoice no.</span><input type="text" id="invNumber"></label>
+        <label class="field"><span>Dated</span><input type="date" id="invDate"></label>
+        <label class="field"><span>Delivery note</span><input type="text" id="deliveryNote"></label>
+        <label class="field"><span>Mode/terms of payment</span><input type="text" id="modeOfPayment" placeholder="e.g. Cash / Credit 15 days"></label>
+        <label class="field"><span>Reference no.</span><input type="text" id="referenceNo"></label>
+        <label class="field"><span>Reference date</span><input type="date" id="referenceDate"></label>
+        <label class="field"><span>Other references</span><input type="text" id="otherReferences"></label>
+        <label class="field"><span>Buyer's order no.</span><input type="text" id="buyersOrderNo"></label>
+        <label class="field"><span>Order dated</span><input type="date" id="buyersOrderDate"></label>
+        <label class="field"><span>Dispatch doc no.</span><input type="text" id="dispatchDocNo"></label>
+        <label class="field"><span>Delivery note date</span><input type="date" id="deliveryNoteDate"></label>
+        <label class="field"><span>Dispatched through</span><input type="text" id="dispatchedThrough"></label>
+        <label class="field"><span>Destination</span><input type="text" id="destination"></label>
+        <label class="field field-wide"><span>Terms of delivery</span><input type="text" id="termsOfDelivery"></label>
+      </div>
+
+      <h2 class="section-label">
+        Buyer (bill to)
+        <span class="inline-actions">
+          <select id="partyPicker" class="mini-select"><option value="">Load saved party…</option></select>
+          <button type="button" id="savePartyBtn" class="mini-btn">Save as party</button>
+        </span>
+      </h2>
+      <div class="field-grid">
+        <label class="field field-wide"><span>Name</span><input type="text" id="custName" placeholder="Customer / business name" list="partiesDatalist"></label>
+        <label class="field field-wide"><span>Address</span><textarea id="custAddress" rows="2" placeholder="Address"></textarea></label>
+        <label class="field"><span>GSTIN/UIN</span><input type="text" id="custGstin"></label>
+        <label class="field"><span>State name</span><input type="text" id="custState" placeholder="e.g. Uttarakhand"></label>
+        <label class="field"><span>State code</span><input type="text" id="custStateCode" placeholder="e.g. 05"></label>
+        <label class="field"><span>Contact</span><input type="text" id="custContact"></label>
+      </div>
+
+      <h2 class="section-label">
+        Consignee (ship to)
+        <label class="inline-check"><input type="checkbox" id="shipSameAsBuyer" checked> Same as buyer</label>
+      </h2>
+      <div class="field-grid" id="shipFields">
+        <label class="field field-wide"><span>Name</span><input type="text" id="shipName"></label>
+        <label class="field field-wide"><span>Address</span><textarea id="shipAddress" rows="2"></textarea></label>
+        <label class="field"><span>GSTIN/UIN</span><input type="text" id="shipGstin"></label>
+        <label class="field"><span>State name</span><input type="text" id="shipState"></label>
+        <label class="field"><span>State code</span><input type="text" id="shipStateCode"></label>
+        <label class="field"><span>Contact</span><input type="text" id="shipContact"></label>
+      </div>
+
+      <h2 class="section-label">Items</h2>
+      <div class="table-wrap">
+        <table class="items-table" id="itemsTable">
+          <thead>
+            <tr>
+              <th class="col-id">Product ID</th>
+              <th class="col-desc">Description</th>
+              <th class="col-hsn">HSN/SAC</th>
+              <th class="col-qty">Qty</th>
+              <th class="col-unit">Per</th>
+              <th class="col-rate">Rate (₹)</th>
+              <th class="col-disc">Disc %</th>
+              <th class="col-gst">GST %</th>
+              <th class="col-amt">Amount</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
+      </div>
+      <button id="addItemBtn" class="add-row-btn">+ Add item</button>
+      <button id="submitInvoiceBtn" class="submit-invoice-btn">✓ Submit Invoice &amp; Deduct Stock</button>
+
+      <h2 class="section-label">Bank details &amp; declaration</h2>
+      <div class="field-grid">
+        <label class="field"><span>Bank name</span><input type="text" id="bankName" placeholder="e.g. Axis Bank"></label>
+        <label class="field"><span>Account no.</span><input type="text" id="bankAccount"></label>
+        <label class="field"><span>Branch &amp; IFS code</span><input type="text" id="bankBranchIfsc"></label>
+        <label class="field"><span>Round off total</span>
+          <select id="roundOff"><option value="yes">Yes</option><option value="no">No</option></select>
+        </label>
+        <label class="field field-wide"><span>Declaration</span>
+          <textarea id="declaration" rows="4"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <!-- ===== Live invoice preview ===== -->
+    <section class="panel preview-panel">
+      <div class="pdf-page-actions">
+        <button type="button" id="downloadPdfBtn" class="pdf-download-btn">Download PDF</button>
+        <button type="button" id="downloadPptBtn" class="ppt-download-btn">Invoice to WPS PowerPoint</button>
+      </div>
+      <div class="paper" id="invoicePaper">
+
+        <div class="inv-title">Tax Invoice</div>
+
+        <table class="doc-table head-table">
+          <tr>
+            <td class="cell-seller" rowspan="2">
+              <div class="seller-name" id="pBizName">Your Business Name</div>
+              <div class="seller-line" id="pBizAddress">Business address</div>
+              <div class="seller-line"><span>GSTIN/UIN: </span><span id="pBizGstin">—</span></div>
+              <div class="seller-line"><span>State Name: </span><span id="pBizState">—</span><span>, Code: </span><span id="pBizStateCode">—</span></div>
+              <div class="seller-line"><span>Contact: </span><span id="pBizContact">—</span></div>
+              <div class="seller-line"><span>E-Mail: </span><span id="pBizEmail">—</span></div>
+            </td>
+            <td class="cell-label">Invoice No.<br><strong id="pInvNumber">—</strong></td>
+            <td class="cell-label">Dated<br><strong id="pInvDate">—</strong></td>
+          </tr>
+          <tr>
+            <td class="cell-label">Delivery Note<br><strong id="pDeliveryNote">—</strong></td>
+            <td class="cell-label">Mode/Terms of Payment<br><strong id="pModeOfPayment">—</strong></td>
+          </tr>
+          <tr>
+            <td class="cell-label">Reference No. &amp; Date<br><strong id="pReferenceNo">—</strong></td>
+            <td class="cell-label">Other References<br><strong id="pOtherReferences">—</strong></td>
+            <td class="cell-label" rowspan="2">Buyer's Order No.<br><strong id="pBuyersOrderNo">—</strong>
+              <div class="cell-sub">Dated<br><strong id="pBuyersOrderDate">—</strong></div>
+            </td>
+          </tr>
+          <tr>
+            <td class="cell-label">Dispatch Doc No.<br><strong id="pDispatchDocNo">—</strong></td>
+            <td class="cell-label">Delivery Note Date<br><strong id="pDeliveryNoteDate">—</strong></td>
+          </tr>
+          <tr>
+            <td class="cell-label">Dispatched through<br><strong id="pDispatchedThrough">—</strong></td>
+            <td class="cell-label">Destination<br><strong id="pDestination">—</strong></td>
+            <td class="cell-label">Terms of Delivery</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="cell-terms" id="pTermsOfDelivery">—</td>
+          </tr>
+        </table>
+
+        <table class="doc-table party-table">
+          <tr>
+            <td class="cell-party">
+              <span class="strip-label">Buyer (Bill to)</span>
+              <strong id="pCustName">—</strong>
+              <div id="pCustAddress"></div>
+              <div><span>GSTIN/UIN: </span><span id="pCustGstin">—</span></div>
+              <div><span>State Name: </span><span id="pCustState">—</span><span>, Code: </span><span id="pCustStateCode">—</span></div>
+              <div><span>Contact: </span><span id="pCustContact">—</span></div>
+            </td>
+            <td class="cell-party">
+              <span class="strip-label">Consignee (Ship to)</span>
+              <strong id="pShipName">—</strong>
+              <div id="pShipAddress"></div>
+              <div><span>GSTIN/UIN: </span><span id="pShipGstin">—</span></div>
+              <div><span>State Name: </span><span id="pShipState">—</span><span>, Code: </span><span id="pShipStateCode">—</span></div>
+              <div><span>Contact: </span><span id="pShipContact">—</span></div>
+            </td>
+          </tr>
+        </table>
+
+        <table class="doc-table items-doc-table">
+          <thead>
+            <tr>
+              <th class="col-sl">Sl</th>
+              <th class="col-desc">Description of Goods</th>
+              <th class="col-hsn">HSN/SAC</th>
+              <th class="col-qty">Quantity</th>
+              <th class="col-rate">Rate</th>
+              <th class="col-unit">per</th>
+              <th class="col-disc">Disc %</th>
+              <th class="col-amt">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="paperBody"></tbody>
+          <tfoot>
+            <tr id="rowCgst" class="tax-line"><td colspan="7" class="tax-label">OUTPUT CGST @<span id="cgstRateLabel">9</span>%</td><td class="col-amt" id="tCgst">0.00</td></tr>
+            <tr id="rowSgst" class="tax-line"><td colspan="7" class="tax-label">OUTPUT SGST @<span id="sgstRateLabel">9</span>%</td><td class="col-amt" id="tSgst">0.00</td></tr>
+            <tr id="rowIgst" class="tax-line"><td colspan="7" class="tax-label">OUTPUT IGST @<span id="igstRateLabel">18</span>%</td><td class="col-amt" id="tIgst">0.00</td></tr>
+            <tr id="rowRound" class="tax-line"><td colspan="7" class="tax-label">ROUND OFF</td><td class="col-amt" id="tRound">0.00</td></tr>
+            <tr class="total-line">
+              <td colspan="3" class="cell-total-label">Total</td>
+              <td class="col-qty" id="tTotalQty">0</td>
+              <td colspan="3"></td>
+              <td class="col-amt" id="tGrand">₹0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <table class="doc-table words-table">
+          <tr>
+            <td>
+              <span class="strip-label">Amount Chargeable (in words)</span>
+              <strong id="pAmountWords">INR Zero Only</strong>
+            </td>
+            <td class="cell-eoe">E. &amp; O.E</td>
+          </tr>
+        </table>
+
+        <table class="doc-table hsn-table">
+          <thead>
+            <tr>
+              <th rowspan="2" class="col-hsn">HSN/SAC</th>
+              <th rowspan="2" class="col-taxable">Taxable&nbsp;Value</th>
+              <th colspan="2" id="hsnCgstHead">CGST</th>
+              <th colspan="2" id="hsnSgstHead">SGST/UTGST</th>
+              <th rowspan="2" class="col-totaltax">Total&nbsp;Tax&nbsp;Amount</th>
+            </tr>
+            <tr>
+              <th class="col-rate">Rate</th><th class="col-amt">Amount</th>
+              <th class="col-rate">Rate</th><th class="col-amt">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="hsnBody"></tbody>
+          <tfoot>
+            <tr class="total-line">
+              <td class="cell-total-label">Total</td>
+              <td class="col-taxable" id="hTotalTaxable">0.00</td>
+              <td></td><td class="col-amt" id="hTotalCgst">0.00</td>
+              <td></td><td class="col-amt" id="hTotalSgst">0.00</td>
+              <td class="col-totaltax" id="hTotalTax">0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <table class="doc-table words-table">
+          <tr>
+            <td>
+              <span class="strip-label">Tax Amount (in words)</span>
+              <strong id="pTaxWords">INR Zero Only</strong>
+            </td>
+          </tr>
+        </table>
+
+        <table class="doc-table foot-table">
+          <tr>
+            <td class="cell-decl">
+              <span class="strip-label">Declaration</span>
+              <div id="pDeclaration"></div>
+            </td>
+            <td class="cell-bank">
+              <span class="strip-label">Company's Bank Details</span>
+              <div><span>Bank Name: </span><span id="pBankName">—</span></div>
+              <div><span>A/c No.: </span><span id="pBankAccount">—</span></div>
+              <div><span>Branch &amp; IFS Code: </span><span id="pBankBranchIfsc">—</span></div>
+              <div class="sign-block">
+                <span>for <strong id="pBizNameSign">Your Business Name</strong></span>
+                <div class="sign-line">Authorised Signatory</div>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <div class="paper-computer-note">This is a Computer Generated Invoice</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== History view ===== -->
+  <section class="view is-hidden" id="view-history">
+    <header class="panel-head">
+      <h1>Saved invoices</h1>
+      <p>Invoices you've saved on this device.</p>
+    </header>
+    <div id="historyList" class="history-list"></div>
+  </section>
+
+  <!-- ===== Send invoice view ===== -->
+  <section class="view is-hidden" id="view-send">
+    <header class="panel-head"><h1>Send Invoice</h1><p>Select a saved invoice, confirm the customer details, then send it directly through WhatsApp.</p></header>
+    <div class="send-card"><div class="send-grid">
+      <label class="field field-wide"><span>Select saved invoice</span><select id="sendInvoiceSelect"><option value="">Select an invoice...</option></select></label>
+      <label class="field"><span>Customer name</span><input type="text" id="sendCustomerName" placeholder="Customer name"></label>
+      <label class="field"><span>WhatsApp / mobile number</span><input type="tel" id="sendCustomerPhone" placeholder="10-digit mobile number"></label>
+      <label class="field field-wide"><span>Customer address (optional)</span><textarea id="sendCustomerAddress" rows="2"></textarea></label>
+      <label class="field field-wide"><span>Message</span><textarea id="sendMessage" rows="7" placeholder="Your invoice message will appear here..."></textarea></label>
+    </div><div class="send-actions"><button id="sendWhatsAppBtn" class="whatsapp-btn">Send on WhatsApp</button><button id="sendPdfBtn" class="send-pdf-btn">Download Invoice PDF</button><span id="sendStatus" class="send-status"></span></div></div>
+  </section>
+
+  <!-- ===== Settings view ===== -->
+  <section class="view is-hidden" id="view-settings">
+    <header class="panel-head">
+      <h1>Your business</h1>
+      <p>Saved on this device and filled in automatically on every new invoice.</p>
+    </header>
+    <div class="field-grid settings-grid">
+      <label class="field field-wide"><span>Business name</span><input type="text" id="bizName"></label>
+      <label class="field field-wide"><span>Address</span><textarea id="bizAddress" rows="2"></textarea></label>
+      <label class="field"><span>GSTIN/UIN</span><input type="text" id="bizGstin"></label>
+      <label class="field"><span>State name</span><input type="text" id="bizState"></label>
+      <label class="field"><span>State code</span><input type="text" id="bizStateCode" placeholder="e.g. 05"></label>
+      <label class="field"><span>Contact</span><input type="text" id="bizContact"></label>
+      <label class="field field-wide"><span>E-mail</span><input type="text" id="bizEmail"></label>
+    </div>
+    <button id="saveBizBtn" class="add-row-btn">Save business details</button>
+    <span id="bizSavedNote" class="saved-note"></span>
+
+    <h2 class="section-label">Danger zone</h2>
+    <p class="danger-note">This clears every invoice, saved item, party, and business detail stored on this device. This cannot be undone.</p>
+    <button id="resetAllBtn" class="danger-btn">Reset all data</button>
+  </section>
+
+  <!-- ===== Items master ===== -->
+  <section class="view is-hidden" id="view-items">
+    <header class="panel-head">
+      <h1>Item catalog</h1>
+      <p>Saved items autocomplete in the invoice — pick one and HSN/rate/GST fill in automatically. Stock reduces when you save an invoice to history.</p>
+    </header>
+    <div class="master-toolbar">
+      <button id="addItemMasterBtn" class="add-row-btn">+ Add item</button>
+      <button id="saveItemsCatalogBtn" class="add-row-btn">💾 Save item catalog</button>
+      <button id="importItemsBtn" class="add-row-btn">📥 Import Excel / WPS</button>
+      <button id="exportItemsBtn" class="add-row-btn">📤 Download Excel / WPS</button>
+      <button id="exportInventoryPptBtn" class="add-row-btn">Export WPS PowerPoint</button>
+      <input type="file" id="importItemsFile" accept=".xlsx,.xls,.csv" class="is-hidden">
+    </div>
+    <div id="itemsCatalogSavedNote" style="margin:8px 0 14px;color:#64748b;font-size:13px;">Product data is saved on this device. Use Download Excel / WPS regularly as a backup.</div>
+    <div class="table-wrap">
+      <table class="master-table" id="itemsMasterTable">
+        <thead>
+          <tr>
+            <th>Product ID</th><th>Description</th><th>HSN/SAC</th><th>Unit</th><th>Cost Price (₹)</th><th>Sale Price (₹)</th><th>GST %</th><th>Purchase Qty</th><th>Sold Qty</th><th>Current Stock</th><th>Track stock</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="itemsMasterBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== Parties master ===== -->
+  <section class="view is-hidden" id="view-parties">
+    <header class="panel-head">
+      <h1>Parties</h1>
+      <p>Saved buyers you can load onto any invoice with one click.</p>
+    </header>
+    <div class="master-toolbar">
+      <button id="addPartyMasterBtn" class="add-row-btn">+ Add party</button>
+      <button id="importPartiesBtn" class="add-row-btn">Import from Excel</button>
+      <button id="exportPartiesBtn" class="add-row-btn">Export to Excel</button>
+      <input type="file" id="importPartiesFile" accept=".xlsx,.xls,.csv" class="is-hidden">
+    </div>
+    <div class="table-wrap">
+      <table class="master-table" id="partiesMasterTable">
+        <thead>
+          <tr><th>Name</th><th>Address</th><th>GSTIN</th><th>State</th><th>Code</th><th>Contact</th><th></th></tr>
+        </thead>
+        <tbody id="partiesMasterBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== Reports ===== -->
+  <section class="view is-hidden" id="view-reports">
+    <header class="panel-head">
+      <h1>Reports</h1>
+      <p>Totals across every invoice you've saved to history on this device.</p>
+    </header>
+    <div class="report-cards" id="reportCards"></div>
+    <div class="master-toolbar">
+      <button id="exportRegisterBtn" class="add-row-btn">Export sales register to Excel / WPS</button>
+      <button id="exportReportsPptBtn" class="add-row-btn">Export full report to WPS PowerPoint</button>
+    </div>
+    <div class="table-wrap">
+      <table class="master-table" id="registerTable">
+        <thead>
+          <tr><th>Date</th><th>Invoice No.</th><th>Party</th><th>Taxable</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total</th></tr>
+        </thead>
+        <tbody id="registerBody"></tbody>
+        <tfoot id="registerFoot"></tfoot>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<datalist id="itemsDatalist"></datalist>
+<datalist id="partiesDatalist"></datalist>
+
+<template id="itemRowTemplate">
+  <tr class="item-row">
+    <td class="col-id"><input type="text" class="i-product-id" placeholder="e.g. DB-001"></td>
+    <td class="col-desc"><input type="text" class="i-desc" placeholder="Item or service" list="itemsDatalist"></td>
+    <td class="col-hsn"><input type="text" class="i-hsn" placeholder="0000"></td>
+    <td class="col-qty"><input type="number" class="i-qty" value="1" min="0" step="1"></td>
+    <td class="col-unit"><input type="text" class="i-unit" value="PCS"></td>
+    <td class="col-rate"><input type="number" class="i-rate" value="0" min="0" step="0.01"></td>
+    <td class="col-disc"><input type="number" class="i-disc" value="0" min="0" max="100" step="0.1"></td>
+    <td class="col-gst">
+      <select class="i-gst">
+        <option value="0">0%</option>
+        <option value="5">5%</option>
+        <option value="12">12%</option>
+        <option value="18" selected>18%</option>
+        <option value="28">28%</option>
+      </select>
+    </td>
+    <td class="col-amt i-amt">₹0.00</td>
+    <td class="col-del"><button type="button" class="i-del" title="Remove item">×</button></td>
+  </tr>
+</template>
+
+<script>
+(function () {
+  "use strict";
+
+  const LS_BUSINESS = "gstbill.business";
+  const LS_HISTORY = "gstbill.history";
+  const LS_DRAFT = "gstbill.draft";
+  const LS_ITEMS = "gstbill.items";
+  const LS_PARTIES = "gstbill.parties";
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => (Number(n) || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const todayISO = () => new Date().toISOString().slice(0, 10);
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+  function formatDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso + "T00:00:00");
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "2-digit" });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+
+  function round2(x) { return Math.round((x + Number.EPSILON) * 100) / 100; }
+
+  /* ---------------------------------------------------------
+     Number to words
+  --------------------------------------------------------- */
+  const ONES = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+    "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+  const TENS = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  function twoDigits(n) { if (n < 20) return ONES[n]; return TENS[Math.floor(n / 10)] + (n % 10 ? " " + ONES[n % 10] : ""); }
+  function threeDigits(n) { if (n < 100) return twoDigits(n); return ONES[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " + twoDigits(n % 100) : ""); }
+  function intToWords(n) {
+    n = Math.round(n);
+    if (n === 0) return "Zero";
+    const crore = Math.floor(n / 10000000); n %= 10000000;
+    const lakh = Math.floor(n / 100000); n %= 100000;
+    const thousand = Math.floor(n / 1000); n %= 1000;
+    const rest = n;
+    let parts = [];
+    if (crore) parts.push(threeDigits(crore) + " Crore");
+    if (lakh) parts.push(threeDigits(lakh) + " Lakh");
+    if (thousand) parts.push(threeDigits(thousand) + " Thousand");
+    if (rest) parts.push(threeDigits(rest));
+    return parts.join(" ") || "Zero";
+  }
+  function amountInWords(amount) {
+    amount = round2(amount);
+    const rupees = Math.floor(amount);
+    const paise = Math.round((amount - rupees) * 100);
+    let words = "INR " + intToWords(rupees);
+    if (paise > 0) words += " and " + intToWords(paise) + " paise";
+    return words + " Only";
+  }
+
+  /* ===========================================================
+     ITEM CATALOG (master)
+  =========================================================== */
+  let itemsMaster = [];
+
+  function normalizeItem(it) {
+    const sold = Number(it.sold ?? it.soldQty ?? 0) || 0;
+    const legacyStock = Number(it.stock ?? 0) || 0;
+    const purchases = Number(it.purchases ?? it.purchaseQty ?? (legacyStock + sold)) || 0;
+    return Object.assign({}, it, {
+      id: it.id || uid(), productId: String(it.productId ?? it.productCode ?? "").trim(), desc: it.desc || "", hsn: it.hsn || "", unit: it.unit || "PCS",
+      costPrice: Number(it.costPrice ?? it.cost ?? 0) || 0,
+      salePrice: Number(it.salePrice ?? it.rate ?? 0) || 0,
+      gst: Number(it.gst ?? 18) || 0,
+      purchases: purchases,
+      sold: sold,
+      stock: round2(purchases - sold),
+      track: it.track !== false
+    });
+  }
+  function loadItemsMaster() {
+    try { itemsMaster = JSON.parse(localStorage.getItem(LS_ITEMS) || "[]").map(normalizeItem); }
+    catch (e) { itemsMaster = []; }
+    localStorage.setItem(LS_ITEMS, JSON.stringify(itemsMaster));
+  }
+  function saveItemsMaster() {
+    itemsMaster = itemsMaster.map(normalizeItem);
+    localStorage.setItem(LS_ITEMS, JSON.stringify(itemsMaster));
+    $("itemsCount").textContent = itemsMaster.length;
+    refreshItemsDatalist();
+  }
+  function refreshItemsDatalist() {
+    const dl = $("itemsDatalist");
+    dl.innerHTML = itemsMaster.map((it) => `<option value="${escapeHtml(it.desc)}">${escapeHtml(it.productId || "")}</option>`).join("");
+  }
+  function findItemByProductId(productId) { const key=(productId||"").trim().toLowerCase(); if(!key)return null; return itemsMaster.find(it=>String(it.productId||"").trim().toLowerCase()===key)||null; }
+  function findItemByDesc(desc) { const key=(desc||"").trim().toLowerCase(); if(!key)return null; return itemsMaster.find(it=>it.desc.trim().toLowerCase()===key)||null; }
+  function findCatalogItem(productId, desc) { return findItemByProductId(productId) || findItemByDesc(desc); }
+  function upsertItemMaster(data) {
+    const existing = findItemByDesc(data.desc);
+    if (existing) Object.assign(existing, data);
+    else itemsMaster.push(Object.assign({ id: uid(), productId: "", purchases: 0, sold: 0, stock: 0, track: true, costPrice: 0, salePrice: 0 }, data));
+    saveItemsMaster();
+  }
+  function addItemMasterRow(data) {
+    const row = normalizeItem(Object.assign({ id: uid(), productId: "", desc: "", hsn: "", unit: "PCS", costPrice: 0, salePrice: 0, gst: 18, purchases: 0, sold: 0, track: true }, data || {}));
+    itemsMaster.push(row);
+    saveItemsMaster();
+    renderItemsMasterTable();
+  }
+  function deleteItemMaster(id) {
+    itemsMaster = itemsMaster.filter((it) => it.id !== id);
+    saveItemsMaster();
+    renderItemsMasterTable();
+  }
+  function stockClass(stock) { return stock <= 0 ? "inventory-out" : stock <= 5 ? "inventory-low" : "inventory-good"; }
+  function renderItemsMasterTable() {
+    const body = $("itemsMasterBody");
+    body.innerHTML = "";
+    itemsMaster.forEach((it) => {
+      const tr = document.createElement("tr");
+      const stock = round2((it.purchases || 0) - (it.sold || 0));
+      it.stock = stock;
+      tr.innerHTML = `
+        <td class="product-id-cell"><input type="text" class="m-product-id" value="${escapeHtml(it.productId || "")}" placeholder="DB-001"></td>
+        <td><input type="text" class="m-desc" value="${escapeHtml(it.desc)}"></td>
+        <td><input type="text" class="m-hsn" value="${escapeHtml(it.hsn)}"></td>
+        <td><input type="text" class="m-unit" value="${escapeHtml(it.unit)}"></td>
+        <td><input type="number" class="m-cost" value="${it.costPrice}" step="0.01" min="0"></td>
+        <td><input type="number" class="m-sale" value="${it.salePrice}" step="0.01" min="0"></td>
+        <td><input type="number" class="m-gst" value="${it.gst}" step="0.1" min="0"></td>
+        <td><input type="number" class="m-purchases" value="${it.purchases}" step="1" min="0"></td>
+        <td><input type="number" class="m-sold" value="${it.sold}" step="1" min="0" readonly title="Automatically updated when invoices are saved"></td>
+        <td class="${stockClass(stock)} m-current-stock">${stock}</td>
+        <td style="text-align:center;"><input type="checkbox" class="m-track" ${it.track ? "checked" : ""}></td>
+        <td><button type="button" class="master-row-del" title="Delete">×</button></td>`;
+      const bind = (cls, field, isNum) => {
+        tr.querySelector(cls).addEventListener("input", () => {
+          it[field] = isNum ? (parseFloat(tr.querySelector(cls).value) || 0) : tr.querySelector(cls).value;
+          it.stock = round2((it.purchases || 0) - (it.sold || 0));
+          tr.querySelector(".m-current-stock").textContent = it.stock;
+          tr.querySelector(".m-current-stock").className = "m-current-stock " + stockClass(it.stock);
+          saveItemsMaster();
+        });
+      };
+      bind(".m-product-id", "productId", false); bind(".m-desc", "desc", false); bind(".m-hsn", "hsn", false); bind(".m-unit", "unit", false);
+      bind(".m-cost", "costPrice", true); bind(".m-sale", "salePrice", true); bind(".m-gst", "gst", true); bind(".m-purchases", "purchases", true);
+      tr.querySelector(".m-track").addEventListener("change", () => { it.track = tr.querySelector(".m-track").checked; saveItemsMaster(); });
+      tr.querySelector(".master-row-del").addEventListener("click", () => deleteItemMaster(it.id));
+      body.appendChild(tr);
+    });
+  }
+
+  /* ===========================================================
+     PARTY CATALOG (master)
+  =========================================================== */
+  let partiesMaster = [];
+
+  function loadPartiesMaster() {
+    try { partiesMaster = JSON.parse(localStorage.getItem(LS_PARTIES) || "[]"); }
+    catch (e) { partiesMaster = []; }
+  }
+  function savePartiesMaster() {
+    localStorage.setItem(LS_PARTIES, JSON.stringify(partiesMaster));
+    $("partiesCount").textContent = partiesMaster.length;
+    refreshPartiesDatalist();
+    refreshPartyPicker();
+  }
+  function refreshPartiesDatalist() {
+    const dl = $("partiesDatalist");
+    dl.innerHTML = partiesMaster.map((p) => `<option value="${escapeHtml(p.name)}">`).join("");
+  }
+  function refreshPartyPicker() {
+    const sel = $("partyPicker");
+    const current = sel.value;
+    sel.innerHTML = '<option value="">Load saved party…</option>' +
+      partiesMaster.map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
+    sel.value = current && partiesMaster.some((p) => p.id === current) ? current : "";
+  }
+  function findPartyByName(name) {
+    const key = (name || "").trim().toLowerCase();
+    if (!key) return null;
+    return partiesMaster.find((p) => p.name.trim().toLowerCase() === key) || null;
+  }
+  function upsertPartyMaster(data) {
+    const existing = findPartyByName(data.name);
+    if (existing) Object.assign(existing, data);
+    else partiesMaster.push(Object.assign({ id: uid() }, data));
+    savePartiesMaster();
+  }
+  function addPartyMasterRow(data) {
+    const row = Object.assign({ id: uid(), name: "", address: "", gstin: "", state: "", stateCode: "", contact: "" }, data || {});
+    partiesMaster.push(row);
+    savePartiesMaster();
+    renderPartiesMasterTable();
+  }
+  function deletePartyMaster(id) {
+    partiesMaster = partiesMaster.filter((p) => p.id !== id);
+    savePartiesMaster();
+    renderPartiesMasterTable();
+  }
+  function renderPartiesMasterTable() {
+    const body = $("partiesMasterBody");
+    body.innerHTML = "";
+    partiesMaster.forEach((p) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input type="text" class="m-name" value="${escapeHtml(p.name)}"></td>
+        <td><input type="text" class="m-address" value="${escapeHtml(p.address)}"></td>
+        <td><input type="text" class="m-gstin" value="${escapeHtml(p.gstin)}"></td>
+        <td><input type="text" class="m-state" value="${escapeHtml(p.state)}"></td>
+        <td><input type="text" class="m-code" value="${escapeHtml(p.stateCode)}"></td>
+        <td><input type="text" class="m-contact" value="${escapeHtml(p.contact)}"></td>
+        <td><button type="button" class="master-row-del" title="Delete">×</button></td>
+      `;
+      const bind = (cls, field) => tr.querySelector(cls).addEventListener("input", () => {
+        p[field] = tr.querySelector(cls).value;
+        savePartiesMaster();
+      });
+      bind(".m-name", "name"); bind(".m-address", "address"); bind(".m-gstin", "gstin");
+      bind(".m-state", "state"); bind(".m-code", "stateCode"); bind(".m-contact", "contact");
+      tr.querySelector(".master-row-del").addEventListener("click", () => deletePartyMaster(p.id));
+      body.appendChild(tr);
+    });
+  }
+
+  /* ===========================================================
+     EXCEL IMPORT / EXPORT (SheetJS)
+  =========================================================== */
+  function pickField(row, aliases) {
+    const keys = Object.keys(row);
+    for (const alias of aliases) {
+      const found = keys.find((k) => k.trim().toLowerCase() === alias);
+      if (found !== undefined && row[found] !== "") return row[found];
+    }
+    return "";
+  }
+
+  function readWorkbookRows(file, callback) {
+    if (typeof XLSX === "undefined") {
+      alert("Excel import needs an internet connection to load the reader library. Please reconnect and try again.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+        callback(rows);
+      } catch (err) {
+        alert("Could not read that file. Please use a .xlsx, .xls or .csv file.");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function syncItemsCatalogFromTable() {
+    const rows = Array.from(document.querySelectorAll("#itemsMasterBody tr"));
+    rows.forEach((tr, index) => {
+      const it = itemsMaster[index];
+      if (!it) return;
+      const val = (sel) => tr.querySelector(sel)?.value ?? "";
+      it.productId = String(val(".m-product-id")).trim();
+      it.desc = String(val(".m-desc")).trim();
+      it.hsn = String(val(".m-hsn")).trim();
+      it.unit = String(val(".m-unit")).trim() || "PCS";
+      it.costPrice = parseFloat(val(".m-cost")) || 0;
+      it.salePrice = parseFloat(val(".m-sale")) || 0;
+      it.gst = parseFloat(val(".m-gst")) || 0;
+      it.purchases = parseFloat(val(".m-purchases")) || 0;
+      it.track = !!tr.querySelector(".m-track")?.checked;
+      it.stock = round2((it.purchases || 0) - (it.sold || 0));
+    });
+    saveItemsMaster();
+  }
+
+  function saveItemsCatalogNow() {
+    syncItemsCatalogFromTable();
+    const note = $("itemsCatalogSavedNote");
+    if (note) {
+      note.textContent = "✓ Item catalog saved successfully on this device. You can restore it later using Import Excel / WPS.";
+      note.style.color = "#15803d";
+      setTimeout(() => { note.textContent = "Product data is saved on this device. Use Download Excel / WPS regularly as a backup."; note.style.color = "#64748b"; }, 3500);
+    }
+  }
+
+  function importItemsFromExcel(file) {
+    readWorkbookRows(file, (rows) => {
+      const imported = [];
+      rows.forEach((row) => {
+        const desc = pickField(row, ["description", "item", "name", "product"]);
+        const productId = pickField(row, ["product id", "productid", "product code", "code", "sku"]);
+        if (!desc && !productId) return;
+        const purchases = parseFloat(pickField(row, ["no. of purchase", "purchase qty", "purchases", "opening stock"])) || 0;
+        const sold = parseFloat(pickField(row, ["no. of sold items", "sold qty", "sold", "sales qty"])) || 0;
+        imported.push(normalizeItem({
+          id: uid(),
+          productId: String(productId || "").trim(),
+          desc: String(desc || "").trim(),
+          hsn: String(pickField(row, ["hsn", "hsn/sac", "hsn code", "sac"]) || "").trim(),
+          unit: String(pickField(row, ["unit", "uom", "per"]) || "PCS").trim(),
+          costPrice: parseFloat(pickField(row, ["cost price", "cost", "purchase price"])) || 0,
+          salePrice: parseFloat(pickField(row, ["sale price", "rate", "price", "mrp"])) || 0,
+          purchases, sold,
+          gst: parseFloat(pickField(row, ["gst", "gst%", "gst %", "tax%", "tax %"])) || 0,
+          track: String(pickField(row, ["track stock", "track"]) || "yes").toLowerCase() !== "no"
+        }));
+      });
+      if (!imported.length) { alert("No valid product rows were found in the Excel/WPS file."); return; }
+      const ok = confirm("Import " + imported.length + " product(s) and replace the current Item Catalog?\n\nThis is useful for restoring a backup in one go.");
+      if (!ok) return;
+      itemsMaster = imported;
+      saveItemsMaster();
+      renderItemsMasterTable();
+      const note = $("itemsCatalogSavedNote");
+      if (note) { note.textContent = "✓ " + imported.length + " product(s) restored and saved to this device."; note.style.color = "#15803d"; }
+      alert(imported.length + " product(s) restored successfully. The Item Catalog has been saved on this device.");
+    });
+  }
+
+  function importPartiesFromExcel(file) {
+    readWorkbookRows(file, (rows) => {
+      let count = 0;
+      rows.forEach((row) => {
+        const name = pickField(row, ["name", "party", "customer", "buyer"]);
+        if (!name) return;
+        upsertPartyMaster({
+          name: String(name),
+          address: String(pickField(row, ["address"])),
+          gstin: String(pickField(row, ["gstin", "gstin/uin", "gst no"])),
+          state: String(pickField(row, ["state", "state name"])),
+          stateCode: String(pickField(row, ["code", "state code"])),
+          contact: String(pickField(row, ["contact", "phone", "mobile"])),
+        });
+        count += 1;
+      });
+      renderPartiesMasterTable();
+      alert(count + " part(y/ies) imported.");
+    });
+  }
+
+  function exportItemsToExcel() {
+    syncItemsCatalogFromTable();
+    if (typeof XLSX === "undefined") { alert("Excel/WPS export needs an internet connection to load the spreadsheet library."); return; }
+    const rows = itemsMaster.map((it) => ({
+      "Product ID": it.productId || "", Description: it.desc, "HSN/SAC": it.hsn, Unit: it.unit, "Cost Price": it.costPrice || 0,
+      "Sale Price": it.salePrice || 0, "GST%": it.gst || 0, "No. of Purchase": it.purchases || 0,
+      "No. of Sold Items": it.sold || 0, "Current Stock": round2((it.purchases || 0) - (it.sold || 0)), "Track Stock": it.track ? "Yes" : "No"
+    }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Items");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(readHistory().map((inv) => ({
+      Date: formatDate(inv.invDate), "Invoice No": inv.invNumber, Party: inv.custName,
+      Taxable: inv.taxable || 0, CGST: inv.cgst || 0, SGST: inv.sgst || 0, IGST: inv.igst || 0, Total: inv.grandTotal || 0
+    }))), "Sales Register");
+    XLSX.writeFile(wb, "devbhoomi-bill-book.xlsx");
+  }
+
+  function exportPartiesToExcel() {
+    if (typeof XLSX === "undefined") { alert("Export needs an internet connection to load the Excel library."); return; }
+    const rows = partiesMaster.map((p) => ({ Name: p.name, Address: p.address, GSTIN: p.gstin, State: p.state, Code: p.stateCode, Contact: p.contact }));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Parties"); XLSX.writeFile(wb, "parties.xlsx");
+  }
+
+  function exportRegisterToExcel() {
+    if (typeof XLSX === "undefined") { alert("Export needs an internet connection to load the spreadsheet library."); return; }
+    const rows = readHistory().map((inv) => ({
+      Date: formatDate(inv.invDate), "Invoice No": inv.invNumber, Party: inv.custName,
+      Taxable: inv.taxable || 0, CGST: inv.cgst || 0, SGST: inv.sgst || 0, IGST: inv.igst || 0, Total: inv.grandTotal || 0,
+      "Items / Qty": (inv.items || []).map((x) => `${x.desc} × ${x.qty}`).join(" | ")
+    }));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), "Sales Register");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(itemsMaster.map((it) => ({ "Product ID":it.productId||"", Description:it.desc, "Cost Price":it.costPrice||0, "Sale Price":it.salePrice||0, Purchases:it.purchases||0, Sold:it.sold||0, Stock:round2((it.purchases||0)-(it.sold||0)) }))), "Inventory");
+    XLSX.writeFile(wb, "devbhoomi-sales-register.xlsx");
+  }
+
+  function buildPptx(filename, includeInvoice) {
+    if (typeof PptxGenJS === "undefined") { alert("WPS PowerPoint export needs an internet connection to load the PowerPoint library."); return; }
+    const pptx = new PptxGenJS(); pptx.layout = "LAYOUT_WIDE"; pptx.author = "DEVBHOOMI BILL BOOK"; pptx.subject = "Billing & Inventory Report";
+    const title = (slide, text, sub) => { slide.addText(text, {x:.55,y:.35,w:12.2,h:.45,fontSize:24,bold:true,color:"101B33"}); if(sub) slide.addText(sub,{x:.58,y:.82,w:12,h:.3,fontSize:10,color:"666666"}); };
+    let slide = pptx.addSlide(); title(slide,"DEVBHOOMI BILL BOOK","Billing, inventory and sales report");
+    const h = itemsMaster.length, sold = itemsMaster.reduce((a,x)=>a+(x.sold||0),0), stock = itemsMaster.reduce((a,x)=>a+((x.purchases||0)-(x.sold||0)),0), sales = readHistory().reduce((a,x)=>a+(x.grandTotal||0),0);
+    slide.addText(`Items: ${h}\nUnits sold: ${sold}\nCurrent stock: ${stock}\nSales value: ₹${fmt(sales)}`,{x:.8,y:1.55,w:5.2,h:2,fontSize:22,bold:true,breakLine:false});
+    slide.addText("Generated from the local DEVBHOOMI BILL BOOK database.",{x:.8,y:4.5,w:7,h:.4,fontSize:12,color:"666666"});
+    slide = pptx.addSlide(); title(slide,"Inventory","Cost price, sale price, purchases, sold quantity and current stock");
+    const invRows = itemsMaster.map((it)=>[it.productId||"",it.desc,it.unit,it.costPrice||0,it.salePrice||0,it.purchases||0,it.sold||0,round2((it.purchases||0)-(it.sold||0))]);
+    slide.addTable([["Item","Unit","Cost","Sale","Purchased","Sold","Stock"],...invRows],{x:.35,y:1.15,w:12.55,h:5.8,border:{type:"solid",color:"D9D9D9",pt:1},fontSize:9,autoFit:false,colW:[3.0,.8,1.15,1.15,1.2,1.0,1.0]});
+    slide = pptx.addSlide(); title(slide,"Sales Register","Saved invoices");
+    const salesRows = readHistory().map(inv=>[formatDate(inv.invDate),inv.invNumber||"",inv.custName||"",fmt(inv.taxable||0),fmt(inv.grandTotal||0)]);
+    slide.addTable([["Date","Invoice","Customer","Taxable","Total"],...salesRows],{x:.45,y:1.15,w:12.1,h:5.8,fontSize:9,border:{type:"solid",color:"D9D9D9",pt:1},colW:[1.4,1.3,4.5,1.8,1.8]});
+    if (includeInvoice) {
+      slide = pptx.addSlide(); title(slide,"Current Invoice",`Invoice ${$("invNumber").value || "—"} · ${formatDate($("invDate").value)}`);
+      const its = readItems(true).filter(x=>x.desc); slide.addTable([["Item","Qty","Rate","Taxable","GST"],...its.map(x=>[x.desc,x.qty,x.rate,x.taxable,x.gstAmt])],{x:.45,y:1.2,w:12.1,h:4.2,fontSize:10,border:{type:"solid",color:"D9D9D9",pt:1}});
+      const t=lastTotals||renderAll(); slide.addText(`Customer: ${$("custName").value||"—"}\nGrand Total: ₹${fmt(t.grand)}`,{x:.55,y:5.75,w:6,h:.8,fontSize:18,bold:true,color:"101B33"});
+    }
+    pptx.writeFile({ fileName: filename });
+  }
+  function downloadInvoicePdf() {
+    const paper = $("invoicePaper");
+    if (typeof html2pdf === "undefined") { window.print(); return; }
+    html2pdf().set({
+      margin: 0.2,
+      filename: `invoice-${$("invNumber").value || "draft"}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+    }).from(paper).save();
+  }
+  function exportInventoryPpt() { buildPptx("devbhoomi-inventory-report.pptx", false); }
+  function exportReportsPpt() { buildPptx("devbhoomi-full-report.pptx", false); }
+  function downloadInvoicePpt() { buildPptx(`invoice-${$("invNumber").value || "draft"}.pptx`, true); }
+
+  /* ===========================================================
+     ITEM ROWS (invoice editor)
+  =========================================================== */
+  const itemsBody = $("itemsBody");
+  const rowTemplate = $("itemRowTemplate");
+
+  function autofillFromCatalog(tr) {
+    const match = findCatalogItem(tr.querySelector(".i-product-id").value, tr.querySelector(".i-desc").value);
+    if (match) { tr.querySelector(".i-product-id").value=match.productId||""; tr.querySelector(".i-desc").value=match.desc||""; tr.querySelector(".i-hsn").value = match.hsn || "";
+      tr.querySelector(".i-rate").value = match.salePrice ?? match.rate ?? 0;
+      tr.querySelector(".i-unit").value = match.unit || "PCS";
+      tr.querySelector(".i-gst").value = String(match.gst ?? 18);
+    }
+  }
+
+  function addItemRow(data) {
+    const frag = rowTemplate.content.cloneNode(true);
+    const tr = frag.querySelector("tr");
+
+    if (data) {
+      tr.querySelector(".i-product-id").value = data.productId || "";
+      tr.querySelector(".i-desc").value = data.desc || "";
+      tr.querySelector(".i-hsn").value = data.hsn || "";
+      tr.querySelector(".i-qty").value = data.qty ?? 1;
+      tr.querySelector(".i-unit").value = data.unit || "PCS";
+      tr.querySelector(".i-rate").value = data.rate ?? 0;
+      tr.querySelector(".i-disc").value = data.disc ?? 0;
+      tr.querySelector(".i-gst").value = String(data.gst ?? 18);
+    }
+
+    tr.querySelector(".i-product-id").addEventListener("input", () => autofillFromCatalog(tr));
+    tr.querySelector(".i-desc").addEventListener("input", () => autofillFromCatalog(tr));
+    tr.querySelectorAll("input, select").forEach((el) => { el.addEventListener("input", () => { renderAll(); saveDraft(); }); el.addEventListener("change", () => { renderAll(); saveDraft(); }); });
+    tr.querySelector(".i-del").addEventListener("click", () => { tr.remove(); renderAll(); });
+
+    itemsBody.appendChild(tr);
+    return tr;
+  }
+
+  function readItems(intraState) {
+    return Array.from(itemsBody.querySelectorAll(".item-row")).map((tr) => {
+      const qty = parseFloat(tr.querySelector(".i-qty").value) || 0;
+      const unit = tr.querySelector(".i-unit").value.trim() || "PCS";
+      const rate = parseFloat(tr.querySelector(".i-rate").value) || 0;
+      const disc = parseFloat(tr.querySelector(".i-disc").value) || 0;
+      const gst = parseFloat(tr.querySelector(".i-gst").value) || 0;
+      const productId = tr.querySelector(".i-product-id").value.trim();
+      const desc = tr.querySelector(".i-desc").value.trim();
+      const hsn = tr.querySelector(".i-hsn").value.trim();
+
+      const gross = qty * rate;
+      const discountAmt = gross * (disc / 100);
+      const taxable = gross - discountAmt;
+      const rawGst = taxable * (gst / 100);
+
+      let cgst = 0, sgst = 0, igst = 0;
+      if (intraState) { cgst = round2(rawGst / 2); sgst = round2(rawGst / 2); }
+      else { igst = round2(rawGst); }
+      const gstAmt = cgst + sgst + igst;
+
+      tr.querySelector(".i-amt").textContent = "₹" + fmt(taxable);
+      return { productId, desc, hsn, qty, unit, rate, disc, gst, gross, discountAmt, taxable, gstAmt, cgst, sgst, igst };
+    });
+  }
+
+  function sameState(a, b) { if (!a || !b) return true; return a.trim().toLowerCase() === b.trim().toLowerCase(); }
+
+  /* ---------------------------------------------------------
+     Consignee "same as buyer"
+  --------------------------------------------------------- */
+  function syncConsignee() {
+    const same = $("shipSameAsBuyer").checked;
+    $("shipFields").style.opacity = same ? "0.5" : "1";
+    ["Name", "Address", "Gstin", "State", "StateCode", "Contact"].forEach((k) => { $("ship" + k).disabled = same; });
+  }
+  function getConsignee() {
+    if ($("shipSameAsBuyer").checked) {
+      return { name: $("custName").value, address: $("custAddress").value, gstin: $("custGstin").value,
+        state: $("custState").value, stateCode: $("custStateCode").value, contact: $("custContact").value };
+    }
+    return { name: $("shipName").value, address: $("shipAddress").value, gstin: $("shipGstin").value,
+      state: $("shipState").value, stateCode: $("shipStateCode").value, contact: $("shipContact").value };
+  }
+
+  /* ===========================================================
+     MAIN RENDER
+  =========================================================== */
+  let lastTotals = null;
+
+  function renderAll() {
+    const bizState = $("bizState").value;
+    const custState = $("custState").value;
+    const intraState = sameState(bizState, custState);
+    const items = readItems(intraState);
+
+    let totalTaxable = 0, totalGst = 0, totalQty = 0, cgstTotal = 0, sgstTotal = 0, igstTotal = 0;
+    const units = new Set();
+    items.forEach((it) => {
+      totalTaxable += it.taxable; totalGst += it.gstAmt;
+      cgstTotal += it.cgst; sgstTotal += it.sgst; igstTotal += it.igst;
+      totalQty += it.qty; if (it.qty) units.add(it.unit);
+    });
+
+    let grand = totalTaxable + totalGst;
+    let roundOff = 0;
+    if ($("roundOff").value === "yes") {
+      const rounded = Math.round(grand);
+      roundOff = rounded - grand;
+      grand = rounded;
+    }
+
+    $("pBizName").textContent = $("bizName").value || "Your Business Name";
+    $("pBizNameSign").textContent = $("bizName").value || "Your Business Name";
+    $("pBizAddress").textContent = $("bizAddress").value || "Business address";
+    $("pBizGstin").textContent = $("bizGstin").value || "—";
+    $("pBizState").textContent = bizState || "—";
+    $("pBizStateCode").textContent = $("bizStateCode").value || "—";
+    $("pBizContact").textContent = $("bizContact").value || "—";
+    $("pBizEmail").textContent = $("bizEmail").value || "—";
+
+    $("pInvNumber").textContent = $("invNumber").value || "—";
+    $("pInvDate").textContent = formatDate($("invDate").value);
+    $("pDeliveryNote").textContent = $("deliveryNote").value || "—";
+    $("pModeOfPayment").textContent = $("modeOfPayment").value || "—";
+    $("pReferenceNo").textContent = [$("referenceNo").value, $("referenceDate").value ? formatDate($("referenceDate").value) : ""].filter(Boolean).join(" / ") || "—";
+    $("pOtherReferences").textContent = $("otherReferences").value || "—";
+    $("pBuyersOrderNo").textContent = $("buyersOrderNo").value || "—";
+    $("pBuyersOrderDate").textContent = formatDate($("buyersOrderDate").value);
+    $("pDispatchDocNo").textContent = $("dispatchDocNo").value || "—";
+    $("pDeliveryNoteDate").textContent = formatDate($("deliveryNoteDate").value);
+    $("pDispatchedThrough").textContent = $("dispatchedThrough").value || "—";
+    $("pDestination").textContent = $("destination").value || "—";
+    $("pTermsOfDelivery").textContent = $("termsOfDelivery").value || "—";
+
+    $("pCustName").textContent = $("custName").value || "—";
+    $("pCustAddress").textContent = $("custAddress").value || "";
+    $("pCustGstin").textContent = $("custGstin").value || "—";
+    $("pCustState").textContent = custState || "—";
+    $("pCustStateCode").textContent = $("custStateCode").value || "—";
+    $("pCustContact").textContent = $("custContact").value || "—";
+
+    const ship = getConsignee();
+    $("pShipName").textContent = ship.name || "—";
+    $("pShipAddress").textContent = ship.address || "";
+    $("pShipGstin").textContent = ship.gstin || "—";
+    $("pShipState").textContent = ship.state || "—";
+    $("pShipStateCode").textContent = ship.stateCode || "—";
+    $("pShipContact").textContent = ship.contact || "—";
+
+    const paperBody = $("paperBody");
+    paperBody.innerHTML = "";
+    let sl = 0;
+    items.forEach((it) => {
+      if (!it.desc && it.taxable === 0) return;
+      sl += 1;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="col-sl">${sl}</td>
+        <td class="col-desc">${escapeHtml(it.desc || "Untitled item")}</td>
+        <td class="col-hsn">${escapeHtml(it.hsn)}</td>
+        <td class="col-qty">${it.qty} ${escapeHtml(it.unit)}</td>
+        <td class="col-rate">${fmt(it.rate)}</td>
+        <td class="col-unit">${escapeHtml(it.unit)}</td>
+        <td class="col-disc">${it.disc ? it.disc + "%" : ""}</td>
+        <td class="col-amt">${fmt(it.taxable)}</td>
+      `;
+      paperBody.appendChild(tr);
+    });
+    if (!paperBody.children.length) {
+      paperBody.innerHTML = `<tr><td colspan="8" style="color:#666; font-style:italic; text-align:center;">Add items to see them here</td></tr>`;
+    }
+
+    $("rowCgst").classList.toggle("is-hidden", !intraState);
+    $("rowSgst").classList.toggle("is-hidden", !intraState);
+    $("rowIgst").classList.toggle("is-hidden", intraState);
+    $("cgstRateLabel").textContent = items[0] ? (items[0].gst / 2) : 9;
+    $("sgstRateLabel").textContent = items[0] ? (items[0].gst / 2) : 9;
+    $("igstRateLabel").textContent = items[0] ? items[0].gst : 18;
+    $("tCgst").textContent = fmt(cgstTotal);
+    $("tSgst").textContent = fmt(sgstTotal);
+    $("tIgst").textContent = fmt(igstTotal);
+    $("rowRound").classList.toggle("is-hidden", roundOff === 0);
+    $("tRound").textContent = (roundOff >= 0 ? "" : "−") + fmt(Math.abs(roundOff));
+
+    const qtyLabel = units.size === 1 ? `${totalQty} ${[...units][0]}` : String(totalQty);
+    $("tTotalQty").textContent = qtyLabel;
+    $("tGrand").textContent = "₹" + fmt(grand);
+
+    $("pAmountWords").textContent = amountInWords(grand);
+    $("pTaxWords").textContent = amountInWords(totalGst);
+
+    const groups = {};
+    items.forEach((it) => {
+      if (!it.hsn && it.taxable === 0) return;
+      const key = it.hsn || "—";
+      if (!groups[key]) groups[key] = { hsn: key, taxable: 0, cgst: 0, sgst: 0, igst: 0, rate: it.gst };
+      groups[key].taxable += it.taxable; groups[key].cgst += it.cgst; groups[key].sgst += it.sgst; groups[key].igst += it.igst;
+    });
+
+    $("hsnCgstHead").textContent = intraState ? "CGST" : "IGST";
+    document.querySelectorAll(".hsn-table thead tr:nth-child(2) th").forEach((th, i) => { if (i >= 2) th.style.display = intraState ? "" : "none"; });
+
+    const hsnBody = $("hsnBody");
+    hsnBody.innerHTML = "";
+    let hTaxable = 0, hCgst = 0, hSgst = 0, hTax = 0;
+    Object.values(groups).forEach((g) => {
+      const totalTax = g.cgst + g.sgst + g.igst;
+      hTaxable += g.taxable; hCgst += g.cgst; hSgst += g.sgst; hTax += totalTax;
+      const tr = document.createElement("tr");
+      if (intraState) {
+        tr.innerHTML = `<td class="col-hsn">${escapeHtml(g.hsn)}</td><td class="col-taxable">${fmt(g.taxable)}</td>
+          <td class="col-rate">${g.rate / 2}%</td><td class="col-amt">${fmt(g.cgst)}</td>
+          <td class="col-rate">${g.rate / 2}%</td><td class="col-amt">${fmt(g.sgst)}</td>
+          <td class="col-totaltax">${fmt(totalTax)}</td>`;
+      } else {
+        tr.innerHTML = `<td class="col-hsn">${escapeHtml(g.hsn)}</td><td class="col-taxable">${fmt(g.taxable)}</td>
+          <td class="col-rate">${g.rate}%</td><td class="col-amt">${fmt(g.igst)}</td><td colspan="2"></td>
+          <td class="col-totaltax">${fmt(totalTax)}</td>`;
+      }
+      hsnBody.appendChild(tr);
+    });
+    if (!hsnBody.children.length) hsnBody.innerHTML = `<tr><td colspan="7" style="text-align:center; font-style:italic; color:#666;">—</td></tr>`;
+    $("hTotalTaxable").textContent = fmt(hTaxable);
+    $("hTotalCgst").textContent = fmt(hCgst);
+    $("hTotalSgst").textContent = fmt(hSgst);
+    $("hTotalTax").textContent = fmt(hTax);
+
+    $("pDeclaration").textContent = $("declaration").value || "";
+    $("pBankName").textContent = $("bankName").value || "—";
+    $("pBankAccount").textContent = $("bankAccount").value || "—";
+    $("pBankBranchIfsc").textContent = $("bankBranchIfsc").value || "—";
+
+    lastTotals = { totalTaxable, totalGst, cgstTotal, sgstTotal, igstTotal, roundOff, grand, intraState, items };
+    scheduleDraftSave();
+    return lastTotals;
+  }
+
+  /* ===========================================================
+     DRAFT AUTOSAVE / RESTORE  (fixes data loss on refresh)
+  =========================================================== */
+  const DRAFT_FIELDS = [
+    "invNumber", "invDate", "deliveryNote", "modeOfPayment", "referenceNo", "referenceDate",
+    "otherReferences", "buyersOrderNo", "buyersOrderDate", "dispatchDocNo", "deliveryNoteDate",
+    "dispatchedThrough", "destination", "termsOfDelivery",
+    "custName", "custAddress", "custGstin", "custState", "custStateCode", "custContact",
+    "shipSameAsBuyer", "shipName", "shipAddress", "shipGstin", "shipState", "shipStateCode", "shipContact",
+    "bankName", "bankAccount", "bankBranchIfsc", "roundOff", "declaration",
+  ];
+
+  let draftTimer = null;
+  function scheduleDraftSave() { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 80); }
+
+  function snapshotForm() {
+    const snap = {};
+    DRAFT_FIELDS.forEach((key) => {
+      const el = $(key);
+      if (!el) return;
+      snap[key] = el.type === "checkbox" ? el.checked : el.value;
+    });
+    snap.items = readItems(true).map((it) => ({ productId: it.productId, desc: it.desc, hsn: it.hsn, qty: it.qty, unit: it.unit, rate: it.rate, disc: it.disc, gst: it.gst }));
+    return snap;
+  }
+
+  function saveDraft() {
+    try {
+      const payload = JSON.stringify(snapshotForm());
+      localStorage.setItem(LS_DRAFT, payload);
+      // Redundant backup: keeps the current editor state recoverable if the primary draft key is damaged.
+      localStorage.setItem(LS_DRAFT + ".backup", payload);
+    } catch (e) {
+      try { localStorage.setItem(LS_DRAFT + ".backup", JSON.stringify(snapshotForm())); } catch (_) {}
+    }
+  }
+
+  function restoreDraftSafely() {
+    let draft = null;
+    try { draft = JSON.parse(localStorage.getItem(LS_DRAFT) || "null"); } catch (e) {}
+    if (!draft) { try { draft = JSON.parse(localStorage.getItem(LS_DRAFT + ".backup") || "null"); } catch (e) {} }
+    return draft;
+  }
+
+  function applySnapshotToForm(snap) {
+    DRAFT_FIELDS.forEach((key) => {
+      const el = $(key);
+      if (!el || !(key in snap)) return;
+      if (el.type === "checkbox") el.checked = !!snap[key];
+      else el.value = snap[key] ?? "";
+    });
+    itemsBody.innerHTML = "";
+    (snap.items || []).forEach((it) => addItemRow(it));
+    if (!snap.items || !snap.items.length) addItemRow();
+    syncConsignee();
+  }
+
+  function hasDraftContent(snap) {
+    if (snap.custName || snap.custAddress) return true;
+    return (snap.items || []).some((it) => it.desc || it.rate);
+  }
+
+  /* ===========================================================
+     BUSINESS SETTINGS
+  =========================================================== */
+  function getBusiness(){try{return JSON.parse(localStorage.getItem(LS_BUSINESS)||"{}")}catch(e){return {}}}
+  function loadBusiness() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS_BUSINESS) || "{}");
+      $("bizName").value = saved.name || "";
+      $("bizAddress").value = saved.address || "";
+      $("bizGstin").value = saved.gstin || "";
+      $("bizState").value = saved.state || "";
+      $("bizStateCode").value = saved.stateCode || "";
+      $("bizContact").value = saved.contact || "";
+      $("bizEmail").value = saved.email || "";
+    } catch (e) { /* ignore corrupt data */ }
+  }
+  function saveBusiness() {
+    const data = {
+      name: $("bizName").value.trim(), address: $("bizAddress").value.trim(),
+      gstin: $("bizGstin").value.trim(), state: $("bizState").value.trim(),
+      stateCode: $("bizStateCode").value.trim(), contact: $("bizContact").value.trim(),
+      email: $("bizEmail").value.trim(),
+    };
+    localStorage.setItem(LS_BUSINESS, JSON.stringify(data));
+    $("bizSavedNote").textContent = "Saved.";
+    setTimeout(() => { $("bizSavedNote").textContent = ""; }, 2000);
+    renderAll();
+  }
+
+  /* ===========================================================
+     HISTORY
+  =========================================================== */
+  function readHistory() { try { return JSON.parse(localStorage.getItem(LS_HISTORY) || "[]"); } catch (e) { return []; } }
+  function writeHistory(list) { localStorage.setItem(LS_HISTORY, JSON.stringify(list)); $("historyCount").textContent = list.length; }
+
+  function snapshotInvoice() {
+    const totals = renderAll();
+    const snap = snapshotForm();
+    snap.savedAt = new Date().toISOString();
+    snap.taxable = totals.totalTaxable;
+    snap.cgst = totals.cgstTotal;
+    snap.sgst = totals.sgstTotal;
+    snap.igst = totals.igstTotal;
+    snap.grandTotal = totals.grand;
+    return snap;
+  }
+
+  function saveCurrentInvoice() {
+    const snap = snapshotInvoice();
+    if (!snap.custName && !snap.items.length) { alert("Add a customer or at least one item before saving."); return; }
+    const duplicate = readHistory().some(x => x.invNumber && x.invNumber === snap.invNumber);
+    if (duplicate && !confirm("This invoice number already exists. Save another invoice with the same number?")) return;
+    for (const it of snap.items) {
+      const match = findCatalogItem(it.productId, it.desc);
+      if (match && match.track && (it.qty || 0) > ((match.purchases || 0) - (match.sold || 0))) {
+        alert(`Insufficient stock for ${it.desc}. Available: ${round2((match.purchases||0)-(match.sold||0))}, requested: ${it.qty}.`); return;
+      }
+    }
+    snap.inventoryApplied = true;
+    const list = readHistory(); list.unshift(snap); writeHistory(list);
+    snap.items.forEach((it) => {
+      const match = findCatalogItem(it.productId, it.desc);
+      if (match) match.sold = round2((match.sold || 0) + (it.qty || 0));
+    });
+    saveItemsMaster(); renderItemsMasterTable(); renderHistoryList(); renderReports();
+    alert("Invoice saved. Sold quantity and stock have been updated automatically.");
+  }
+
+  function renderHistoryList() {
+    const list = readHistory();
+    const el = $("historyList");
+    el.innerHTML = "";
+    if (!list.length) {
+      el.innerHTML = `<p class="history-empty">No saved invoices yet. Fill one in, then use "Save to history" from the New invoice screen.</p>`;
+      return;
+    }
+    list.forEach((inv, idx) => {
+      const row = document.createElement("div");
+      row.className = "history-item";
+      row.innerHTML = `
+        <div>
+          <strong>${escapeHtml(inv.invNumber || "Untitled")} — ${escapeHtml(inv.custName || "No customer")}</strong>
+          <span>${formatDate(inv.invDate)} · ₹${fmt(inv.grandTotal)}</span>
+        </div>
+        <div class="history-actions">
+          <button data-idx="${idx}" class="load-btn">Load</button>
+          <button data-idx="${idx}" class="danger del-btn">Delete</button>
+        </div>
+      `;
+      el.appendChild(row);
+    });
+    el.querySelectorAll(".load-btn").forEach((btn) => btn.addEventListener("click", () => loadInvoice(parseInt(btn.dataset.idx, 10))));
+    el.querySelectorAll(".del-btn").forEach((btn) => btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      const list2 = readHistory();
+      const removed = list2[idx];
+      if (removed && removed.inventoryApplied) {
+        (removed.items || []).forEach((it) => { const match = findCatalogItem(it.productId, it.desc); if (match) match.sold = Math.max(0, round2((match.sold || 0) - (it.qty || 0))); });
+        saveItemsMaster(); renderItemsMasterTable();
+      }
+      list2.splice(idx, 1); writeHistory(list2); renderHistoryList(); renderReports();
+    }));
+  }
+
+  function loadInvoice(idx) {
+    const inv = readHistory()[idx];
+    if (!inv) return;
+    applySnapshotToForm(inv);
+    switchView("editor");
+    renderAll();
+  }
+
+  /* ===========================================================
+     REPORTS
+  =========================================================== */
+  function renderReports() {
+    const list = readHistory();
+    const cards = $("reportCards");
+    let taxable = 0, cgst = 0, sgst = 0, igst = 0, grand = 0;
+    list.forEach((inv) => { taxable += inv.taxable || 0; cgst += inv.cgst || 0; sgst += inv.sgst || 0; igst += inv.igst || 0; grand += inv.grandTotal || 0; });
+
+    cards.innerHTML = [
+      ["Invoices saved", list.length],
+      ["Taxable value", "₹" + fmt(taxable)],
+      ["CGST", "₹" + fmt(cgst)],
+      ["SGST", "₹" + fmt(sgst)],
+      ["IGST", "₹" + fmt(igst)],
+      ["Grand total", "₹" + fmt(grand)],
+    ].map(([label, val]) => `<div class="report-card"><span>${label}</span><strong>${val}</strong></div>`).join("");
+
+    const body = $("registerBody");
+    body.innerHTML = list.map((inv) => `
+      <tr>
+        <td>${formatDate(inv.invDate)}</td>
+        <td>${escapeHtml(inv.invNumber || "—")}</td>
+        <td>${escapeHtml(inv.custName || "—")}</td>
+        <td>${fmt(inv.taxable || 0)}</td>
+        <td>${fmt(inv.cgst || 0)}</td>
+        <td>${fmt(inv.sgst || 0)}</td>
+        <td>${fmt(inv.igst || 0)}</td>
+        <td>${fmt(inv.grandTotal || 0)}</td>
+      </tr>
+    `).join("") || `<tr><td colspan="8" style="text-align:center; font-style:italic; color:var(--ink-soft);">No invoices saved yet</td></tr>`;
+
+    $("registerFoot").innerHTML = list.length ? `
+      <tr style="font-weight:600;">
+        <td colspan="3">Total</td>
+        <td>${fmt(taxable)}</td><td>${fmt(cgst)}</td><td>${fmt(sgst)}</td><td>${fmt(igst)}</td><td>${fmt(grand)}</td>
+      </tr>` : "";
+  }
+
+  /* ===========================================================
+     SEND INVOICE
+  =========================================================== */
+  function refreshSendInvoiceList(){const select=$("sendInvoiceSelect");if(!select)return;const cur=select.value,list=readHistory();select.innerHTML='<option value="">Select an invoice...</option>'+list.map((inv,i)=>`<option value="${i}">Invoice ${escapeHtml(inv.invNumber||"—")} — ${escapeHtml(inv.custName||"No customer")} — ₹${fmt(inv.grandTotal||0)}</option>`).join("");if(cur&&list[cur])select.value=cur;}
+  function buildWhatsAppMessage(inv,name,address){const biz=getBusiness();return [`Hello ${name||inv.custName||"Customer"},`,`Please find your invoice from ${biz.name||"DEVBHOOMI BILL BOOK"}.`,`Invoice No: ${inv.invNumber||"—"}`,`Date: ${formatDate(inv.invDate)}`,`Amount: ₹${fmt(inv.grandTotal||0)}`,address?`Address: ${address}`:"","Thank you for your business!"].filter(Boolean).join("\n");}
+  function loadSendInvoice(){const idx=parseInt($("sendInvoiceSelect").value,10),inv=readHistory()[idx];if(!inv){$("sendMessage").value="";return;}$("sendCustomerName").value=inv.custName||"";$("sendCustomerPhone").value=inv.custContact||"";$("sendCustomerAddress").value=inv.custAddress||"";$("sendMessage").value=buildWhatsAppMessage(inv,inv.custName,inv.custAddress);$("sendStatus").textContent="Invoice loaded.";}
+  function normalizePhone(phone){return String(phone||"").replace(/\D/g,"").replace(/^0/,"");}
+  function getSelectedSendInvoice(){const idx=parseInt($("sendInvoiceSelect").value,10);return Number.isFinite(idx)?readHistory()[idx]:null;}
+  function sendSelectedInvoiceWhatsApp(){const inv=getSelectedSendInvoice();if(!inv){alert("Select a saved invoice first.");return;}const name=$("sendCustomerName").value.trim(),phone=normalizePhone($("sendCustomerPhone").value);if(!name){alert("Enter the customer name.");return;}if(phone.length!==10){alert("Enter a valid 10-digit Indian mobile number.");return;}const msg=$("sendMessage").value.trim()||buildWhatsAppMessage(inv,name,$("sendCustomerAddress").value.trim());window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`,"_blank","noopener");$("sendStatus").textContent="WhatsApp opened with the message ready to send.";}
+  async function downloadSelectedInvoicePdf(){const inv=getSelectedSendInvoice();if(!inv){alert("Select a saved invoice first.");return;}loadInvoice(readHistory().indexOf(inv));await new Promise(r=>setTimeout(r,100));downloadInvoicePdf();}
+
+  /* ===========================================================
+     NEW / RESET
+  =========================================================== */
+  function newInvoice() {
+    localStorage.removeItem(LS_DRAFT);
+    localStorage.removeItem(LS_DRAFT + ".backup");
+    itemsBody.innerHTML = "";
+    ["custName", "custAddress", "custGstin", "custState", "custStateCode", "custContact",
+     "shipName", "shipAddress", "shipGstin", "shipState", "shipStateCode", "shipContact",
+     "deliveryNote", "modeOfPayment", "referenceNo", "otherReferences", "buyersOrderNo",
+     "dispatchDocNo", "dispatchedThrough", "destination", "termsOfDelivery"].forEach((id) => { $(id).value = ""; });
+    $("invDate").value = todayISO();
+    $("invNumber").value = generateInvoiceNumber();
+    $("shipSameAsBuyer").checked = true;
+    syncConsignee();
+    addItemRow();
+    renderAll();
+    switchView("editor");
+  }
+
+  function generateInvoiceNumber() { return String(readHistory().length + 1); }
+
+  function resetAllData() {
+    if (!confirm("This clears every invoice, item, party, and business detail stored on this device. This cannot be undone. Continue?")) return;
+    [LS_BUSINESS, LS_HISTORY, LS_DRAFT, LS_DRAFT + ".backup", LS_ITEMS, LS_PARTIES].forEach((k) => localStorage.removeItem(k));
+    location.reload();
+  }
+
+  /* ===========================================================
+     VIEW SWITCHING
+  =========================================================== */
+  const VIEWS = ["editor", "history", "items", "parties", "reports", "send", "settings"];
+  function switchView(name) {
+    VIEWS.forEach((v) => $("view-" + v).classList.toggle("is-hidden", v !== name));
+    VIEWS.forEach((v) => { const btn = $("nav" + v.charAt(0).toUpperCase() + v.slice(1)); if (btn) btn.classList.remove("is-active"); });
+    const activeBtn = $("nav" + name.charAt(0).toUpperCase() + name.slice(1));
+    if (activeBtn) activeBtn.classList.add("is-active");
+    if (name === "history") renderHistoryList();
+    if (name === "items") renderItemsMasterTable();
+    if (name === "parties") renderPartiesMasterTable();
+    if (name === "reports") renderReports();
+    if (name === "send") refreshSendInvoiceList();
+  }
+
+  /* ===========================================================
+     INIT
+  =========================================================== */
+  function init() {
+    loadBusiness();
+    loadItemsMaster();
+    loadPartiesMaster();
+    $("historyCount").textContent = readHistory().length;
+    $("itemsCount").textContent = itemsMaster.length;
+    $("partiesCount").textContent = partiesMaster.length;
+    refreshItemsDatalist();
+    refreshPartiesDatalist();
+    refreshPartyPicker();
+
+    $("declaration").value =
+      "1. Any disputes are subject to jurisdiction only.\n" +
+      "2. Interest will be charged @18% p.a. if payment is not made within due date.\n" +
+      "3. Cheque bounce charges Rs. 500/- will be taken back on goods once sold.";
+
+    // Restore an in-progress draft if one exists, otherwise start blank.
+    let draft = restoreDraftSafely();
+    if (draft && hasDraftContent(draft)) {
+      applySnapshotToForm(draft);
+      if (!$("invNumber").value) $("invNumber").value = generateInvoiceNumber();
+      if (!$("invDate").value) $("invDate").value = todayISO();
+    } else {
+      $("invDate").value = todayISO();
+      $("invNumber").value = generateInvoiceNumber();
+      addItemRow();
+    }
+
+    document.querySelectorAll("#view-editor input, #view-editor select, #view-editor textarea")
+      .forEach((el) => {
+        if (!el.closest(".item-row")) {
+          el.addEventListener("input", () => { renderAll(); saveDraft(); });
+          el.addEventListener("change", () => { renderAll(); saveDraft(); });
+        }
+      });
+
+    // Save synchronously whenever the browser is about to hide/unload the page.
+    window.addEventListener("pagehide", saveDraft);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveDraft(); });
+
+    $("shipSameAsBuyer").addEventListener("change", () => { syncConsignee(); renderAll(); });
+    syncConsignee();
+
+    $("addItemBtn").addEventListener("click", () => { addItemRow(); renderAll(); });
+    $("submitInvoiceBtn").addEventListener("click", saveCurrentInvoice);
+    $("printBtn").addEventListener("click", () => window.print());
+    $("newBtn").addEventListener("click", () => newInvoice());
+
+    $("navEditor").addEventListener("click", () => switchView("editor"));
+    $("navHistory").addEventListener("click", () => switchView("history"));
+    $("navItems").addEventListener("click", () => switchView("items"));
+    $("navParties").addEventListener("click", () => switchView("parties"));
+    $("navReports").addEventListener("click", () => switchView("reports"));
+    $("navSend").addEventListener("click", () => switchView("send"));
+    $("navSettings").addEventListener("click", () => switchView("settings"));
+
+    $("saveBizBtn").addEventListener("click", saveBusiness);
+    $("resetAllBtn").addEventListener("click", resetAllData);
+
+    const saveHistBtn = document.createElement("button");
+    saveHistBtn.textContent = "Save to history";
+    saveHistBtn.className = "rail-ghost";
+    saveHistBtn.addEventListener("click", saveCurrentInvoice);
+    $("printBtn").insertAdjacentElement("afterend", saveHistBtn);
+
+    // Party picker + save-as-party
+    $("partyPicker").addEventListener("change", () => {
+      const p = partiesMaster.find((x) => x.id === $("partyPicker").value);
+      if (!p) return;
+      $("custName").value = p.name; $("custAddress").value = p.address; $("custGstin").value = p.gstin;
+      $("custState").value = p.state; $("custStateCode").value = p.stateCode; $("custContact").value = p.contact;
+      renderAll();
+    });
+    $("savePartyBtn").addEventListener("click", () => {
+      if (!$("custName").value.trim()) { alert("Enter a buyer name first."); return; }
+      upsertPartyMaster({
+        name: $("custName").value.trim(), address: $("custAddress").value, gstin: $("custGstin").value,
+        state: $("custState").value, stateCode: $("custStateCode").value, contact: $("custContact").value,
+      });
+      alert("Saved to Parties.");
+    });
+
+    // Items master toolbar
+    $("addItemMasterBtn").addEventListener("click", () => addItemMasterRow());
+    $("saveItemsCatalogBtn").addEventListener("click", saveItemsCatalogNow);
+    $("importItemsBtn").addEventListener("click", () => $("importItemsFile").click());
+    $("importItemsFile").addEventListener("change", (e) => { if (e.target.files[0]) importItemsFromExcel(e.target.files[0]); e.target.value = ""; });
+    $("exportItemsBtn").addEventListener("click", exportItemsToExcel);
+    $("exportInventoryPptBtn").addEventListener("click", exportInventoryPpt);
+
+    // Parties master toolbar
+    $("addPartyMasterBtn").addEventListener("click", () => addPartyMasterRow());
+    $("importPartiesBtn").addEventListener("click", () => $("importPartiesFile").click());
+    $("importPartiesFile").addEventListener("change", (e) => { if (e.target.files[0]) importPartiesFromExcel(e.target.files[0]); e.target.value = ""; });
+    $("exportPartiesBtn").addEventListener("click", exportPartiesToExcel);
+
+    $("exportRegisterBtn").addEventListener("click", exportRegisterToExcel);
+    $("exportReportsPptBtn").addEventListener("click", exportReportsPpt);
+    $("downloadPdfBtn").addEventListener("click", downloadInvoicePdf);
+    $("downloadPptBtn").addEventListener("click", downloadInvoicePpt);
+    $("sendInvoiceSelect").addEventListener("change", loadSendInvoice);
+    $("sendWhatsAppBtn").addEventListener("click", sendSelectedInvoiceWhatsApp);
+    $("sendPdfBtn").addEventListener("click", downloadSelectedInvoicePdf);
+
+    renderAll();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+
+</script>
+</body>
+</html>
