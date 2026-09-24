@@ -454,6 +454,9 @@ button:active { transform: translateY(0) scale(.98); }
 .inventory-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
 .pdf-page-actions { display:flex; gap:8px; justify-content:flex-end; margin-bottom:10px; flex-wrap:wrap; }
 .pdf-download-btn { background: var(--navy); color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; box-shadow:0 8px 22px rgba(16,27,51,.12); }
+.excel-linked { color:#15803d !important; font-weight:600; }
+.excel-warning { color:#a35b16 !important; font-weight:600; }
+
 .ppt-download-btn { background: #6d3f9e; color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; }
 @keyframes viewIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 @keyframes logoPulse { 0%,100% { box-shadow:0 0 0 0 rgba(166,117,47,.25); } 50% { box-shadow:0 0 0 7px rgba(166,117,47,0); } }
@@ -484,6 +487,8 @@ button:active { transform: translateY(0) scale(.98); }
   .pdf-page-actions { display: none !important; }
 }
 
+
+.settings-help{margin:-4px 0 14px;color:var(--ink-soft);font-size:13px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
@@ -498,7 +503,7 @@ button:active { transform: translateY(0) scale(.98); }
     <div class="rail-brand">
       <span class="rail-mark">R</span>
       <div class="rail-title">
-        <strong>Devbhoomi Paints and Hardware</strong>
+        <strong>DEVBHOOMI BILL BOOK</strong>
         <span>Smart GST billing &amp; inventory</span>
       </div>
     </div>
@@ -524,8 +529,13 @@ button:active { transform: translateY(0) scale(.98); }
 
     <section class="panel form-panel">
       <header class="panel-head">
-        <h1>Invoice details</h1>
-        <p>Fill this in — the tax invoice on the right updates as you type.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+          <div>
+            <h1>Invoice details</h1>
+            <p>Fill this in — the tax invoice on the right updates as you type.</p>
+          </div>
+          <button type="button" id="blankInvoiceBtn" class="add-row-btn">＋ Blank Invoice</button>
+        </div>
       </header>
 
       <h2 class="section-label">Invoice</h2>
@@ -814,6 +824,14 @@ button:active { transform: translateY(0) scale(.98); }
       <label class="field"><span>Contact</span><input type="text" id="bizContact"></label>
       <label class="field field-wide"><span>E-mail</span><input type="text" id="bizEmail"></label>
     </div>
+
+    <h2 class="section-label">Bank / Account details</h2>
+    <p class="settings-help">These details are saved on this device and automatically appear on every new invoice. You can change them here anytime.</p>
+    <div class="field-grid settings-grid">
+      <label class="field"><span>Bank name</span><input type="text" id="bizBankName" placeholder="e.g. HDFC Bank"></label>
+      <label class="field"><span>Account no.</span><input type="text" id="bizBankAccount" placeholder="Account number"></label>
+      <label class="field field-wide"><span>Branch &amp; IFSC code</span><input type="text" id="bizBankBranchIfsc" placeholder="Branch name / IFSC"></label>
+    </div>
     <button id="saveBizBtn" class="add-row-btn">Save business details</button>
     <span id="bizSavedNote" class="saved-note"></span>
 
@@ -831,12 +849,15 @@ button:active { transform: translateY(0) scale(.98); }
     <div class="master-toolbar">
       <button id="addItemMasterBtn" class="add-row-btn">+ Add item</button>
       <button id="saveItemsCatalogBtn" class="add-row-btn">💾 Save item catalog</button>
+      <button id="linkExcelBtn" class="add-row-btn">🔗 Link Excel File</button>
+      <button id="syncExcelBtn" class="add-row-btn">⟳ Sync to Excel</button>
       <button id="importItemsBtn" class="add-row-btn">📥 Import Excel / WPS</button>
       <button id="exportItemsBtn" class="add-row-btn">📤 Download Excel / WPS</button>
       <button id="exportInventoryPptBtn" class="add-row-btn">Export WPS PowerPoint</button>
       <input type="file" id="importItemsFile" accept=".xlsx,.xls,.csv" class="is-hidden">
     </div>
-    <div id="itemsCatalogSavedNote" style="margin:8px 0 14px;color:#64748b;font-size:13px;">Product data is saved on this device. Use Download Excel / WPS regularly as a backup.</div>
+    <div id="itemsCatalogSavedNote" style="margin:8px 0 6px;color:#64748b;font-size:13px;">Product data is saved on this device. Link one Excel file once; after permission is granted, website changes will update the same Excel file automatically.</div>
+    <div id="excelLinkStatus" style="margin:0 0 14px;color:#64748b;font-size:13px;"></div>
     <div class="table-wrap">
       <table class="master-table" id="itemsMasterTable">
         <thead>
@@ -930,6 +951,13 @@ button:active { transform: translateY(0) scale(.98); }
   const LS_DRAFT = "gstbill.draft";
   const LS_ITEMS = "gstbill.items";
   const LS_PARTIES = "gstbill.parties";
+  const DB_EXCEL = "devbhoomi.billbook.excel";
+  const DB_EXCEL_STORE = "handles";
+  const DB_EXCEL_KEY = "main";
+  let linkedExcelHandle = null;
+  let linkedExcelTimer = null;
+  let linkedExcelBusy = false;
+
 
   const $ = (id) => document.getElementById(id);
   const fmt = (n) => (Number(n) || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1012,6 +1040,7 @@ button:active { transform: translateY(0) scale(.98); }
     localStorage.setItem(LS_ITEMS, JSON.stringify(itemsMaster));
     $("itemsCount").textContent = itemsMaster.length;
     refreshItemsDatalist();
+    scheduleLinkedExcelSync();
   }
   function refreshItemsDatalist() {
     const dl = $("itemsDatalist");
@@ -1146,6 +1175,196 @@ button:active { transform: translateY(0) scale(.98); }
       tr.querySelector(".master-row-del").addEventListener("click", () => deletePartyMaster(p.id));
       body.appendChild(tr);
     });
+  }
+
+  /* ===========================================================
+     LINKED EXCEL WORKBOOK (Chrome / Edge File System Access API)
+     One selected .xlsx file becomes the live workbook for this app.
+  =========================================================== */
+  function excelStatus(text, kind) {
+    const el = $("excelLinkStatus");
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = kind === "good" ? "excel-linked" : kind === "warn" ? "excel-warning" : "";
+  }
+
+  function openExcelHandleDB() {
+    return new Promise((resolve, reject) => {
+      if (!window.indexedDB) return reject(new Error("IndexedDB is not available."));
+      const req = indexedDB.open(DB_EXCEL, 1);
+      req.onupgradeneeded = () => req.result.createObjectStore(DB_EXCEL_STORE);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error || new Error("Could not open local storage for the Excel link."));
+    });
+  }
+
+  async function storeExcelHandle(handle) {
+    try {
+      const db = await openExcelHandleDB();
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_EXCEL_STORE, "readwrite");
+        tx.objectStore(DB_EXCEL_STORE).put(handle, DB_EXCEL_KEY);
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+      });
+      db.close();
+    } catch (e) { /* File handle persistence is optional. */ }
+  }
+
+  async function restoreExcelHandle() {
+    try {
+      const db = await openExcelHandleDB();
+      const handle = await new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_EXCEL_STORE, "readonly");
+        const req = tx.objectStore(DB_EXCEL_STORE).get(DB_EXCEL_KEY);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+      db.close();
+      linkedExcelHandle = handle;
+      if (handle) {
+        // Do not ask for permission here: browsers only allow a permission
+        // prompt from a user gesture. If permission is already persisted,
+        // the file can continue updating without asking the user again.
+        let state = "prompt";
+        try {
+          if (typeof handle.queryPermission === "function") {
+            state = await handle.queryPermission({ mode: "readwrite" });
+          }
+        } catch (_) {}
+        if (state === "granted") {
+          excelStatus(`✓ Linked Excel: ${handle.name}. Automatic updates are enabled.`, "good");
+          // Catch up once after reopening the app.
+          setTimeout(() => syncLinkedExcelWorkbook(false), 300);
+        } else {
+          excelStatus(`Excel linked: ${handle.name}. One-time access is needed again in this browser session. Click Sync to Excel and Allow — you do NOT need to select the file again.`, "warn");
+        }
+      }
+      return handle;
+    } catch (e) { return null; }
+  }
+
+  async function hasExcelWritePermission(handle, request) {
+    if (!handle || typeof handle.queryPermission !== "function") return false;
+    const opts = { mode: "readwrite" };
+    const current = await handle.queryPermission(opts);
+    if (current === "granted") return true;
+    if (request && current === "prompt" && typeof handle.requestPermission === "function") {
+      return (await handle.requestPermission(opts)) === "granted";
+    }
+    return false;
+  }
+
+  function buildLinkedWorkbook() {
+    const itemRows = itemsMaster.map((it) => ({
+      "Product ID": it.productId || "", Description: it.desc, "HSN/SAC": it.hsn, Unit: it.unit,
+      "Cost Price": it.costPrice || 0, "Sale Price": it.salePrice || 0, "GST%": it.gst || 0,
+      "No. of Purchase": it.purchases || 0, "No. of Sold Items": it.sold || 0,
+      "Current Stock": round2((it.purchases || 0) - (it.sold || 0)), "Track Stock": it.track ? "Yes" : "No"
+    }));
+    const salesRows = readHistory().map((inv) => ({
+      Date: formatDate(inv.invDate), "Invoice No": inv.invNumber, Party: inv.custName,
+      Taxable: inv.taxable || 0, CGST: inv.cgst || 0, SGST: inv.sgst || 0,
+      IGST: inv.igst || 0, Total: inv.grandTotal || 0,
+      "Items / Qty": (inv.items || []).map((x) => `${x.desc} × ${x.qty}`).join(" | ")
+    }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(itemRows), "Items");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salesRows), "Sales Register");
+    return wb;
+  }
+
+  async function syncLinkedExcelWorkbook(showAlert) {
+    if (!linkedExcelHandle) return false;
+    if (typeof XLSX === "undefined") return false;
+    if (linkedExcelBusy) return false;
+    try {
+      const permitted = await hasExcelWritePermission(linkedExcelHandle, false);
+      if (!permitted) {
+        excelStatus("Excel is linked, but write permission needs to be granted again. Click Sync to Excel.", "warn");
+        return false;
+      }
+      linkedExcelBusy = true;
+      const wb = buildLinkedWorkbook();
+      const bytes = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const writable = await linkedExcelHandle.createWritable();
+      await writable.write(new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+      await writable.close();
+      excelStatus(`✓ Excel updated automatically: ${linkedExcelHandle.name} · ${new Date().toLocaleTimeString("en-IN")}`, "good");
+      if (showAlert) alert("Excel file updated successfully.");
+      return true;
+    } catch (e) {
+      excelStatus("Excel update failed. Keep the file accessible and click Sync to Excel.", "warn");
+      if (showAlert) alert("Could not update the linked Excel file. Please click Sync to Excel and allow access again.");
+      return false;
+    } finally { linkedExcelBusy = false; }
+  }
+
+  function scheduleLinkedExcelSync() {
+    if (!linkedExcelHandle) return;
+    clearTimeout(linkedExcelTimer);
+    linkedExcelTimer = setTimeout(() => syncLinkedExcelWorkbook(false), 1200);
+  }
+
+  // Keep the linked workbook current while this page is open, including
+  // changes made by invoice saves and item-catalog edits.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && linkedExcelHandle) {
+      syncLinkedExcelWorkbook(false);
+    }
+  });
+
+  async function linkExcelFile() {
+    if (typeof window.showSaveFilePicker !== "function") {
+      alert("Live Excel linking needs Google Chrome or Microsoft Edge. For the most reliable one-time linking, open the HTTPS/Vercel version of this website rather than the downloaded HTML file.");
+      return;
+    }
+    if (typeof XLSX === "undefined") {
+      alert("Excel library is not loaded. Please check your internet connection and try again.");
+      return;
+    }
+
+    // If a file was already linked, NEVER make the user choose it again.
+    // Just restore/request permission for the existing handle and sync it.
+    if (linkedExcelHandle) {
+      const permitted = await hasExcelWritePermission(linkedExcelHandle, true);
+      if (permitted) {
+        excelStatus(`✓ Linked to ${linkedExcelHandle.name}. Automatic updates are enabled.`, "good");
+        await syncLinkedExcelWorkbook(false);
+      } else {
+        excelStatus(`Access to ${linkedExcelHandle.name} was not granted. The file is still linked; click Sync and allow access.`, "warn");
+      }
+      return;
+    }
+
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: "devbhoomi-bill-book.xlsx",
+        types: [{ description: "Excel Workbook", accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"] } }]
+      });
+      linkedExcelHandle = handle;
+      await storeExcelHandle(handle);
+      const permitted = await hasExcelWritePermission(handle, true);
+      if (!permitted) { excelStatus("Excel file selected, but write permission was not granted.", "warn"); return; }
+      excelStatus(`✓ Linked to ${handle.name}. You will not need to select this file again unless you change/revoke access.`, "good");
+      await syncLinkedExcelWorkbook(false);
+    } catch (e) {
+      if (e && e.name !== "AbortError") alert("Excel linking was not completed.");
+    }
+  }
+
+  async function manualSyncLinkedExcel() {
+    if (!linkedExcelHandle) {
+      await linkExcelFile();
+      return;
+    }
+    // Re-authorize the SAME stored file; never ask the user to select it again.
+    const permitted = await hasExcelWritePermission(linkedExcelHandle, true);
+    if (!permitted) {
+      excelStatus(`Could not get write access to ${linkedExcelHandle.name}. The file is still linked; allow access when Chrome asks.`, "warn");
+      return;
+    }
+    await syncLinkedExcelWorkbook(true);
   }
 
   /* ===========================================================
@@ -1648,16 +1867,31 @@ button:active { transform: translateY(0) scale(.98); }
       $("bizStateCode").value = saved.stateCode || "";
       $("bizContact").value = saved.contact || "";
       $("bizEmail").value = saved.email || "";
+      $("bizBankName").value = saved.bankName || "";
+      $("bizBankAccount").value = saved.bankAccount || "";
+      $("bizBankBranchIfsc").value = saved.bankBranchIfsc || "";
     } catch (e) { /* ignore corrupt data */ }
   }
+  function applyBusinessBankDefaults(force = false) {
+    const saved = getBusiness();
+    if (!$('bankName') || !$('bankAccount') || !$('bankBranchIfsc')) return;
+    if (force || !$('bankName').value.trim()) $('bankName').value = saved.bankName || '';
+    if (force || !$('bankAccount').value.trim()) $('bankAccount').value = saved.bankAccount || '';
+    if (force || !$('bankBranchIfsc').value.trim()) $('bankBranchIfsc').value = saved.bankBranchIfsc || '';
+  }
+
   function saveBusiness() {
     const data = {
       name: $("bizName").value.trim(), address: $("bizAddress").value.trim(),
       gstin: $("bizGstin").value.trim(), state: $("bizState").value.trim(),
       stateCode: $("bizStateCode").value.trim(), contact: $("bizContact").value.trim(),
       email: $("bizEmail").value.trim(),
+      bankName: $("bizBankName").value.trim(),
+      bankAccount: $("bizBankAccount").value.trim(),
+      bankBranchIfsc: $("bizBankBranchIfsc").value.trim(),
     };
     localStorage.setItem(LS_BUSINESS, JSON.stringify(data));
+    applyBusinessBankDefaults(false);
     $("bizSavedNote").textContent = "Saved.";
     setTimeout(() => { $("bizSavedNote").textContent = ""; }, 2000);
     renderAll();
@@ -1806,7 +2040,9 @@ button:active { transform: translateY(0) scale(.98); }
     ["custName", "custAddress", "custGstin", "custState", "custStateCode", "custContact",
      "shipName", "shipAddress", "shipGstin", "shipState", "shipStateCode", "shipContact",
      "deliveryNote", "modeOfPayment", "referenceNo", "otherReferences", "buyersOrderNo",
-     "dispatchDocNo", "dispatchedThrough", "destination", "termsOfDelivery"].forEach((id) => { $(id).value = ""; });
+     "dispatchDocNo", "dispatchedThrough", "destination", "termsOfDelivery",
+     "bankName", "bankAccount", "bankBranchIfsc"].forEach((id) => { $(id).value = ""; });
+    applyBusinessBankDefaults(true);
     $("invDate").value = todayISO();
     $("invNumber").value = generateInvoiceNumber();
     $("shipSameAsBuyer").checked = true;
@@ -1846,6 +2082,7 @@ button:active { transform: translateY(0) scale(.98); }
   function init() {
     loadBusiness();
     loadItemsMaster();
+    restoreExcelHandle();
     loadPartiesMaster();
     $("historyCount").textContent = readHistory().length;
     $("itemsCount").textContent = itemsMaster.length;
@@ -1865,9 +2102,11 @@ button:active { transform: translateY(0) scale(.98); }
       applySnapshotToForm(draft);
       if (!$("invNumber").value) $("invNumber").value = generateInvoiceNumber();
       if (!$("invDate").value) $("invDate").value = todayISO();
+      applyBusinessBankDefaults(false);
     } else {
       $("invDate").value = todayISO();
       $("invNumber").value = generateInvoiceNumber();
+      applyBusinessBankDefaults(true);
       addItemRow();
     }
 
@@ -1890,6 +2129,7 @@ button:active { transform: translateY(0) scale(.98); }
     $("submitInvoiceBtn").addEventListener("click", saveCurrentInvoice);
     $("printBtn").addEventListener("click", () => window.print());
     $("newBtn").addEventListener("click", () => newInvoice());
+    $("blankInvoiceBtn").addEventListener("click", () => newInvoice());
 
     $("navEditor").addEventListener("click", () => switchView("editor"));
     $("navHistory").addEventListener("click", () => switchView("history"));
@@ -1928,6 +2168,8 @@ button:active { transform: translateY(0) scale(.98); }
     // Items master toolbar
     $("addItemMasterBtn").addEventListener("click", () => addItemMasterRow());
     $("saveItemsCatalogBtn").addEventListener("click", saveItemsCatalogNow);
+    $("linkExcelBtn").addEventListener("click", linkExcelFile);
+    $("syncExcelBtn").addEventListener("click", manualSyncLinkedExcel);
     $("importItemsBtn").addEventListener("click", () => $("importItemsFile").click());
     $("importItemsFile").addEventListener("change", (e) => { if (e.target.files[0]) importItemsFromExcel(e.target.files[0]); e.target.value = ""; });
     $("exportItemsBtn").addEventListener("click", exportItemsToExcel);
