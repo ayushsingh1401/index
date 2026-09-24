@@ -849,7 +849,7 @@ button:active { transform: translateY(0) scale(.98); }
     <div class="master-toolbar">
       <button id="addItemMasterBtn" class="add-row-btn">+ Add item</button>
       <button id="saveItemsCatalogBtn" class="add-row-btn">💾 Save item catalog</button>
-      <button id="linkExcelBtn" class="add-row-btn">🔗 Link Excel File</button>
+      <button id="linkExcelBtn" class="add-row-btn">🔗 Link / Change Excel</button>
       <button id="syncExcelBtn" class="add-row-btn">⟳ Sync to Excel</button>
       <button id="importItemsBtn" class="add-row-btn">📥 Import Excel / WPS</button>
       <button id="exportItemsBtn" class="add-row-btn">📤 Download Excel / WPS</button>
@@ -1305,7 +1305,7 @@ button:active { transform: translateY(0) scale(.98); }
       await linkedExcelHandle.getFile();
       const wb = buildLinkedWorkbook();
       const bytes = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-      const writable = await linkedExcelHandle.createWritable({ mode: "exclusive" });
+      const writable = await linkedExcelHandle.createWritable({ keepExistingData: false, mode: "exclusive" });
       try {
         await writable.write(new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
         await writable.close();
@@ -1356,8 +1356,8 @@ button:active { transform: translateY(0) scale(.98); }
   });
 
   async function linkExcelFile() {
-    if (!window.isSecureContext || (typeof window.showOpenFilePicker !== "function" && typeof window.showSaveFilePicker !== "function")) {
-      alert("Live Excel linking requires Google Chrome or Microsoft Edge on your HTTPS/Vercel website. Do not open the downloaded HTML file with C:/Users/...");
+    if (!window.isSecureContext || typeof window.showOpenFilePicker !== "function") {
+      alert("Live Excel linking requires Google Chrome or Microsoft Edge on your HTTPS/Vercel website. Please do not open the downloaded HTML with C:/Users/...");
       return;
     }
     if (typeof XLSX === "undefined") {
@@ -1365,65 +1365,72 @@ button:active { transform: translateY(0) scale(.98); }
       return;
     }
 
-    // If a file is already linked, use the SAME stored handle. Never make the
-    // user choose another file unless the old file no longer exists.
-    if (linkedExcelHandle) {
-      const permitted = await hasExcelWritePermission(linkedExcelHandle, true);
-      if (permitted) {
-        excelStatus(`✓ Linked to ${linkedExcelHandle.name}. Automatic updates are enabled.`, "good");
-        await syncLinkedExcelWorkbook(false);
-      } else {
-        excelStatus(`The same file is still linked: ${linkedExcelHandle.name}. Chrome did not grant write access. Click Sync to Excel and allow access.`, "warn");
-      }
-      return;
-    }
-
     try {
-      let handle;
-      // IMPORTANT: for an existing workbook use OPEN picker, not SAVE picker.
-      // This avoids accidentally creating a second file when the user already
-      // has a workbook containing their inventory.
-      if (typeof window.showOpenFilePicker === "function") {
-        const handles = await window.showOpenFilePicker({
-          multiple: false,
-          types: [{ description: "Excel Workbook", accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"] } }]
-        });
-        handle = handles[0];
-      } else {
-        handle = await window.showSaveFilePicker({
-          suggestedName: "devbhoomi-bill-book.xlsx",
-          types: [{ description: "Excel Workbook", accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"] } }]
-        });
+      // This button ALWAYS lets the user choose/change the workbook.
+      // The stored handle is used automatically in the background; this picker
+      // is only needed when the user intentionally wants to choose another file.
+      const handles = await window.showOpenFilePicker({
+        multiple: false,
+        excludeAcceptAllOption: true,
+        types: [{
+          description: "Excel Workbook",
+          accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"] }
+        }]
+      });
+      const handle = handles && handles[0];
+      if (!handle) return;
+
+      // Verify that it is really an Excel workbook before replacing the stored link.
+      const file = await handle.getFile();
+      const lower = (file.name || "").toLowerCase();
+      if (!lower.endsWith(".xlsx")) {
+        alert("Please select an .xlsx Excel workbook.");
+        return;
+      }
+
+      const permitted = await hasExcelWritePermission(handle, true);
+      if (!permitted) {
+        excelStatus(`Selected ${handle.name}, but write permission was not granted. Click Sync to Excel and allow access.`, "warn");
+        return;
       }
 
       linkedExcelHandle = handle;
       await storeExcelHandle(handle);
-      const permitted = await hasExcelWritePermission(handle, true);
-      if (!permitted) {
-        excelStatus(`Excel selected: ${handle.name}. Write access was not granted yet. Click Sync to Excel and allow access.`, "warn");
-        return;
+      excelStatus(`✓ Linked to ${handle.name}. Automatic updates are ON.`, "good");
+
+      // Immediately write the current website data into the newly selected file.
+      const ok = await syncLinkedExcelWorkbook(true);
+      if (!ok) {
+        excelStatus(`File selected: ${handle.name}, but the first write failed. Close the workbook in Excel/WPS and click Sync to Excel.`, "warn");
       }
-      excelStatus(`✓ Linked to ${handle.name}. Automatic updates are enabled.`, "good");
-      await syncLinkedExcelWorkbook(false);
     } catch (e) {
       console.error("Excel linking failed:", e);
-      if (e && e.name !== "AbortError") alert(`Excel linking failed: ${e.message || e.name || "Unknown error"}`);
+      if (e && e.name !== "AbortError") {
+        alert(`Excel linking failed: ${e.message || e.name || "Unknown error"}`);
+      }
     }
   }
 
   async function manualSyncLinkedExcel() {
+    // A click on this button is a valid user gesture, so the browser is allowed
+    // to request read/write permission for a previously stored file handle.
     if (!linkedExcelHandle) {
       await linkExcelFile();
       return;
     }
 
-    const permitted = await hasExcelWritePermission(linkedExcelHandle, true);
-    if (!permitted) {
-      excelStatus(`Same Excel file is linked, but Chrome has not granted write access yet.`, "warn");
-      alert("The same Excel file is already linked. Click Allow if Chrome asks for access. Also make sure the Excel file is closed in Microsoft Excel.");
-      return;
+    try {
+      const permitted = await hasExcelWritePermission(linkedExcelHandle, true);
+      if (!permitted) {
+        excelStatus(`Write permission is still not granted for ${linkedExcelHandle.name}.`, "warn");
+        alert("Chrome did not grant write access. Click Allow when prompted. If Excel/WPS has the workbook open, close it first and click Sync again.");
+        return;
+      }
+      await syncLinkedExcelWorkbook(true);
+    } catch (e) {
+      console.error("Manual Excel sync failed:", e);
+      alert(`Excel sync failed: ${e.message || e.name || "Unknown error"}`);
     }
-    await syncLinkedExcelWorkbook(true);
   }
 
   /* ===========================================================
